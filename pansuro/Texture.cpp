@@ -57,13 +57,14 @@ bool Texture::LoadTexture(const std::wstring& path)
 	D3D12_HEAP_PROPERTIES heapProperty = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	D3D12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
 
+	ComPtr<ID3D12Resource> textureUploadBuffer;
 	hr = DEVICE->CreateCommittedResource(
 		&heapProperty,
 		D3D12_HEAP_FLAG_NONE,
 		&desc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(m_TextureUploadBuffer.GetAddressOf()));
+		IID_PPV_ARGS(textureUploadBuffer.GetAddressOf()));
 
 	if (FAILED(hr))
 	{
@@ -73,12 +74,14 @@ bool Texture::LoadTexture(const std::wstring& path)
 
 	::UpdateSubresources(CMD_LIST.Get(),
 		m_Texture.Get(),
-		m_TextureUploadBuffer.Get(),
+		textureUploadBuffer.Get(),
 		0, 0,
 		static_cast<unsigned int>(subResources.size()),
 		subResources.data());
+	const auto toDefaultBarrier = CD3DX12_RESOURCE_BARRIER::Transition(m_Texture.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+	CMD_LIST->ResourceBarrier(1, &toDefaultBarrier);
 
-	RELEASE_UPLOAD_BUFFER(m_TextureUploadBuffer);
+	RELEASE_UPLOAD_BUFFER(textureUploadBuffer);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Format = m_RawImage.GetMetadata().format;

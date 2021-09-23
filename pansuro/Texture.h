@@ -18,7 +18,6 @@ private:
 
 	ScratchImage m_RawImage;
 	ComPtr<ID3D12Resource> m_Texture;
-	ComPtr<ID3D12Resource> m_TextureUploadBuffer;
 	D3D12_GPU_DESCRIPTOR_HANDLE m_SrvGpuHandle;
 	UINT m_MyIndex;
 };
