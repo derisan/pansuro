@@ -301,7 +301,7 @@ void Engine::BeginRender()
 
 void Engine::EndRender()
 {
-	const auto toRenderTargetBarrier = CD3DX12_RESOURCE_BARRIER::Transition(m_RenderTargets[m_FrameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+	const auto toRenderTargetBarrier = CD3DX12_RESOURCE_BARRIER::Transition(m_RenderTargets[m_FrameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 	m_CmdList->ResourceBarrier(1, &toRenderTargetBarrier);
 
 	ThrowIfFailed(m_CmdList->Close());
