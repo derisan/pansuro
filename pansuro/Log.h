@@ -7,7 +7,7 @@
 class Log
 {
 public:
-	static void OnInit();
+	static void Init();
 
 	static std::shared_ptr<spdlog::logger> GetLogger() { return s_Logger; }
 
