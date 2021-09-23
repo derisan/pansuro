@@ -14,7 +14,7 @@ public:
 	~Scene();
 
 	void OnInit();
-	void OnUpdate();
+	void OnUpdate(float dt);
 	void OnRender();
 	void OnDestroy();
 

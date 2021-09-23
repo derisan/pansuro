@@ -5,7 +5,7 @@
 #include "Mesh.h"
 #include "Scene.h"
 #include "TextureDescriptorHeap.h"
-
+#include "Timer.h"
 
 Engine* Engine::s_Instance = nullptr;
 TextureDescriptorHeap* Engine::s_TextureDescriptorHeap = nullptr;
@@ -41,6 +41,7 @@ Engine* Engine::CreateEngine(UINT width, UINT height, std::wstring title)
 void Engine::OnInit()
 {
 	Log::Init();
+	TIMER->OnInit();
 
 	MK_INFO("Engine Initializing...");
 
@@ -63,7 +64,19 @@ void Engine::OnDestroy()
 
 void Engine::OnUpdate()
 {
-	m_ActiveScene->OnUpdate();
+	TIMER->OnUpdate();
+
+	float dt = TIMER->GetDeltaTime();
+
+	m_ActiveScene->OnUpdate(dt);
+
+#ifdef _DEBUG
+	UINT fps = TIMER->GetFPS();
+
+	WCHAR text[100] = L"";
+	::wsprintf(text, L"%s (%d)", m_Title.c_str(), fps);
+	::SetWindowText(Application::GetHwnd(), text);
+#endif
 }
 
 void Engine::OnRender()

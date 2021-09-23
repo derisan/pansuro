@@ -22,7 +22,7 @@ void Scene::OnInit()
 	LoadAssets();
 }
 
-void Scene::OnUpdate()
+void Scene::OnUpdate(float dt)
 {
 	auto view = m_Registry.view<TransformComponent>();
 	for (auto entity : view)
