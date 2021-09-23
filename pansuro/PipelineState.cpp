@@ -7,12 +7,13 @@ PipelineState::PipelineState(const std::wstring& shaderFilename,
 	const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputElementDescs, 
 	ComPtr<ID3D12RootSignature> rootSignature, 
 	CD3DX12_RASTERIZER_DESC rasterizerState, 
-	CD3DX12_BLEND_DESC blendState)
+	CD3DX12_BLEND_DESC blendState,
+	CD3DX12_DEPTH_STENCIL_DESC depthStencilState)
 {
 	ComPtr<ID3DBlob> vertexShader;
 	ComPtr<ID3DBlob> pixelShader;
 
-#ifdef _DEBUG
+#ifdef MK_DEBUG
 	UINT compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #else
 	UINT compileFlags = 0;
@@ -28,8 +29,7 @@ PipelineState::PipelineState(const std::wstring& shaderFilename,
 	psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader.Get());
 	psoDesc.RasterizerState = rasterizerState;
 	psoDesc.BlendState = blendState;
-	psoDesc.DepthStencilState.DepthEnable = FALSE;
-	psoDesc.DepthStencilState.StencilEnable = FALSE;
+	psoDesc.DepthStencilState = depthStencilState;
 	psoDesc.SampleMask = UINT_MAX;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	psoDesc.NumRenderTargets = 1;

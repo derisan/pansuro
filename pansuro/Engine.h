@@ -4,11 +4,16 @@
 
 #include "PipelineState.h"
 
+class Mesh;
+class Scene;
+class TextureDescriptorHeap;
+
 class Engine
 {
 public:
-	Engine(UINT width, UINT height, std::wstring title);
 	~Engine();
+
+	static Engine* CreateEngine(UINT width, UINT height, std::wstring title);
 
 	void OnInit();
 	void OnDestroy();
@@ -18,6 +23,8 @@ public:
 	void OnKeyDown(UINT8 keycode);
 	void OnKeyUp(UINT8 keycode);
 
+	void Submit(Mesh* mesh);
+
 	UINT GetWidth() const { return m_Width; }
 	UINT GetHeight() const { return m_Height; }
 	float GetAspectRatio() const { return m_AspectRatio; }
@@ -25,10 +32,14 @@ public:
 
 	ComPtr<ID3D12Device> GetDevice() { return m_Device; }
 	ComPtr<ID3D12GraphicsCommandList> GetCmdList() { return m_CmdList; }
+	void AddUsedUploadBuffer(ComPtr<ID3D12Resource> buffer) { m_UsedUploadBuffers.push_back(buffer); }
 
-	static Engine* Instance() { return s_Instance; }
+	static Engine* GetEngine() { return s_Instance; }
+	static TextureDescriptorHeap* GetTexHeap() { return s_TextureDescriptorHeap; }
 
 private:
+	Engine(UINT width, UINT height, std::wstring title);
+
 	void LoadPipeline();
 	void LoadAssets();
 	void CreateRootSignature();
@@ -39,12 +50,12 @@ private:
 	void BeginRender();
 	void EndRender();
 
-	void CreateTestTriangle();
-
 private:
 	static Engine* s_Instance;
+	static TextureDescriptorHeap* s_TextureDescriptorHeap;
 
 	static const UINT kFrameCount = 2;
+
 
 	// Window properties.
 	UINT m_Width;
@@ -64,6 +75,8 @@ private:
 	ComPtr<ID3D12GraphicsCommandList> m_CmdList;
 	ComPtr<ID3D12Fence> m_Fence;
 	ComPtr<ID3D12RootSignature> m_RootSignature;
+	ComPtr<ID3D12Resource> m_DsvBuffer;
+	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
 
 	std::unique_ptr<PipelineState> m_PSO;
 
@@ -72,10 +85,14 @@ private:
 	HANDLE m_FenceEvent;
 	UINT64 m_FenceValues[kFrameCount];
 
-	// For test
-	ComPtr<ID3D12Resource> m_VertexBuffer;
-	D3D12_VERTEX_BUFFER_VIEW m_VertexBufferView;
+	std::vector<ComPtr<ID3D12Resource>> m_UsedUploadBuffers;
+
+	Scene* m_ActiveScene;
 };
 
-#define DEVICE Engine::Instance()->GetDevice()
-#define CMD_LIST Engine::Instance()->GetCmdList()
+#define ENGINE Engine::GetEngine()
+#define DEVICE Engine::GetEngine()->GetDevice()
+#define CMD_LIST Engine::GetEngine()->GetCmdList()
+#define RELEASE_UPLOAD_BUFFER(x) Engine::GetEngine()->AddUsedUploadBuffer(x)
+#define SUBMIT(x) Engine::GetEngine()->Submit(x)
+#define TEXHEAP Engine::GetTexHeap()
