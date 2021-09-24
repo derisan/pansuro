@@ -5,17 +5,17 @@
 class Mesh
 {
 public:
-	Mesh(const std::vector<Vertex>& vertices,
-		const std::vector<UINT>& indices);
-
 	D3D12_VERTEX_BUFFER_VIEW* GetVertexBufferView() { return &m_VertexBufferView; }
 	D3D12_INDEX_BUFFER_VIEW* GetIndexBufferView() { return &m_IndexBufferView; }
 
 	UINT GetIndexCount() const { return m_IndexCount; }
 
-	static Mesh* CreateMesh(const std::wstring& path);
+	static Mesh* Load(const std::wstring& path);
 
 private:
+	Mesh(const std::vector<Vertex>& vertices,
+		const std::vector<UINT>& indices);
+
 	void CreateVertexBuffer(const std::vector<Vertex>& vertices);
 	void CreateIndexBuffer(const std::vector<UINT>& indices);
 

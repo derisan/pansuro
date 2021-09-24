@@ -63,7 +63,7 @@ void Scene::OnDestroy()
 void Scene::LoadAssets()
 {
 	auto entt = m_Registry.create();
-	m_Registry.emplace<MeshRendererComponent>(entt, ResourceManager::LoadCubeMesh(), ResourceManager::LoadTexture(L"Assets/Textures/veigar.jpg"));
+	m_Registry.emplace<MeshRendererComponent>(entt, ResourceManager::GetMesh(L"Assets/Cube.gpmesh"), ResourceManager::GetTexture(L"Assets/Cube.png"));
 	m_Registry.emplace<TransformComponent>(entt);
 
 	camera = m_Registry.create();

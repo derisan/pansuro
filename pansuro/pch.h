@@ -25,6 +25,8 @@
 #include <algorithm>
 #include <array>
 #include <filesystem>
+#include <fstream>
+#include <sstream>
 #include <unordered_map>
 
 using namespace DirectX;

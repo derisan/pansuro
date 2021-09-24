@@ -2,6 +2,9 @@
 #include "Mesh.h"
 
 #include "Engine.h"
+#include "ResourceManager.h"
+
+#include <rapidjson/document.h>
 
 Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<UINT>& indices)
 {
@@ -9,9 +12,91 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<UINT>& indices
 	CreateIndexBuffer(indices);
 }
 
-Mesh* Mesh::CreateMesh(const std::wstring& path)
+Mesh* Mesh::Load(const std::wstring& path)
 {
-	return nullptr;
+	std::ifstream file(path);
+	if (!file.is_open())
+	{
+		MK_ASSERT(nullptr, "Mesh file not found.");
+	}
+
+	std::stringstream fileStream;
+	fileStream << file.rdbuf();
+	std::string contents = fileStream.str();
+	rapidjson::StringStream jsonStr(contents.c_str());
+	rapidjson::Document doc;
+	doc.ParseStream(jsonStr);
+
+	if (!doc.IsObject())
+	{
+		MK_ASSERT(nullptr, "Is not valid json file.");
+	}
+
+	const rapidjson::Value& textures = doc["textures"];
+	if (!textures.IsArray() || textures.Size() < 1)
+	{
+		MK_ASSERT(nullptr, "Mesh file has no texture.");
+	}
+
+	for (rapidjson::SizeType i = 0; i < textures.Size(); i++)
+	{
+		std::string texName = textures[i].GetString();
+		ResourceManager::GetTexture(s2ws(texName));
+	}
+
+	const rapidjson::Value& vertsJson = doc["vertices"];
+	if (!vertsJson.IsArray() || vertsJson.Size() < 1)
+	{
+		MK_ASSERT(nullptr, "Mesh file has no vertices.");
+	}
+
+	std::vector<Vertex> vertices;
+	vertices.reserve(vertsJson.Size());
+
+	for (rapidjson::SizeType i = 0; i < vertsJson.Size(); i++)
+	{
+		const rapidjson::Value& vert = vertsJson[i];
+		if (!vert.IsArray() || vert.Size() != 8)
+		{
+			MK_ASSERT(nullptr, "Unknown vertex format.");
+		}
+
+		Vertex v;
+
+		v.Position.x = vert[0].GetFloat();
+		v.Position.y = vert[1].GetFloat();
+		v.Position.z = vert[2].GetFloat();
+		v.Normal.x = vert[3].GetFloat();
+		v.Normal.y = vert[4].GetFloat();
+		v.Normal.z = vert[5].GetFloat();
+		v.UV.x = vert[6].GetFloat();
+		v.UV.y = vert[7].GetFloat();
+
+		vertices.push_back(std::move(v));
+	}
+
+	const rapidjson::Value& indJson = doc["indices"];
+	if (!indJson.IsArray() || indJson.Size() < 1)
+	{
+		MK_ASSERT(nullptr, "Mesh file has no indices.");
+	}
+
+	std::vector<UINT> indices;
+	indices.reserve(indJson.Size() * 3);
+	for (rapidjson::SizeType i = 0; i < indJson.Size(); i++)
+	{
+		const rapidjson::Value& ind = indJson[i];
+		if (!ind.IsArray() || ind.Size() != 3)
+		{
+			MK_ASSERT(nullptr, "Unknown index format.");
+		}
+
+		indices.emplace_back(ind[0].GetUint());
+		indices.emplace_back(ind[1].GetUint());
+		indices.emplace_back(ind[2].GetUint());
+	}
+
+	return new Mesh(vertices, indices);
 }
 
 void Mesh::CreateVertexBuffer(const std::vector<Vertex>& vertices)
