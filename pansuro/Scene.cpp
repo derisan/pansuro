@@ -9,6 +9,8 @@
 #include "CameraComponent.h"
 #include "TransformComponent.h"
 #include "MeshRendererComponent.h"
+#include "TagComponent.h"
+#include "Entity.h"
 
 Scene::Scene()
 {
@@ -31,11 +33,15 @@ void Scene::OnUpdate(float dt)
 
 	rot += 90.0f * dt;
 
-	auto view = m_Registry.view<TransformComponent>();
+	auto view = m_Registry.view<TagComponent, TransformComponent>();
 	for (auto entity : view)
 	{
-		auto& transform = view.get<TransformComponent>(entity);
-		transform.SetRotation(Vector3(0.0f, rot, 0.0f));
+		auto [tag, transform] = view.get<TagComponent, TransformComponent>(entity);
+
+		if (tag == L"Box")
+		{
+			transform.SetRotation(Vector3(0.0f, rot, 0.0f));
+		}
 	}
 }
 
@@ -62,12 +68,11 @@ void Scene::OnDestroy()
 
 void Scene::LoadAssets()
 {
-	auto entt = m_Registry.create();
-	m_Registry.emplace<MeshRendererComponent>(entt, ResourceManager::GetMesh(L"Assets/Cube.gpmesh"), ResourceManager::GetTexture(L"Assets/Cube.png"));
-	m_Registry.emplace<TransformComponent>(entt);
-
 	camera = m_Registry.create();
 	m_Registry.emplace<CameraComponent>(camera, Vector3(0.0f, 2.0f, -2.0f), Vector3::Backward);
+
+	m_Box = CreateEntity(L"Box");
+	m_Box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Cube.gpmesh"), ResourceManager::GetTexture(L"Assets/Cube.png"));
 }
 
 void Scene::OnKeyDown(UINT8 keycode)
@@ -100,4 +105,17 @@ void Scene::OnKeyDown(UINT8 keycode)
 void Scene::OnKeyUp(UINT8 keycode)
 {
 
+}
+
+Entity* Scene::CreateEntity(const std::wstring& tag)
+{
+	Entity* entity = new Entity(m_Registry.create(), this);
+	entity->AddComponent<TransformComponent>();
+	entity->AddComponent<TagComponent>(tag);
+	return entity;
+}
+
+void Scene::DestroyEntity(Entity entity)
+{
+	m_Registry.destroy(entity);
 }

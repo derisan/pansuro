@@ -4,6 +4,8 @@
 
 #include <entt/entt.hpp>
 
+class Entity;
+
 class Scene
 {
 public:
@@ -18,6 +20,9 @@ public:
 	void OnKeyDown(UINT8 keycode);
 	void OnKeyUp(UINT8 keycode);
 
+	Entity* CreateEntity(const std::wstring& tag = L"default");
+	void DestroyEntity(Entity entity);
+
 private:
 	void LoadAssets();
 
@@ -26,4 +31,8 @@ private:
 
 	// For test
 	entt::entity camera;
+
+	Entity* m_Box;
+
+	friend class Entity;
 };
