@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Core.h"
-
 #include <entt/entt.hpp>
+
+#include "Core.h"
+#include  "MyUUID.h"
 
 class Entity;
 
@@ -21,7 +22,7 @@ public:
 	void OnKeyUp(UINT8 keycode);
 
 	Entity* CreateEntity(const std::wstring& tag = L"default");
-	void DestroyEntity(Entity entity);
+	void DestroyEntityWithID(MyUUID id);
 
 private:
 	void LoadAssets();
@@ -29,10 +30,9 @@ private:
 private:
 	entt::registry m_Registry;
 
-	// For test
-	entt::entity camera;
+	std::unordered_map<MyUUID, Entity*> m_EntityMap;
 
-	Entity* m_Box;
+	Entity* m_MainCamera;
 
 	friend class Entity;
 };

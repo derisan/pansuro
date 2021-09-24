@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "MyUUID.h"
 #include "IDComponent.h"
+#include "TransformComponent.h"
 
 class Entity
 {
@@ -51,6 +52,7 @@ public:
 	}
 
 	MyUUID GetUUID() { return GetComponent<IDComponent>().ID; }
+	TransformComponent& Tranfrom() { return GetComponent<TransformComponent>(); }
 
 private:
 	entt::entity m_EntityHandle = entt::null;

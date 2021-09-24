@@ -9,10 +9,12 @@
 #include "CameraComponent.h"
 #include "TransformComponent.h"
 #include "MeshRendererComponent.h"
+#include "IDComponent.h"
 #include "TagComponent.h"
 #include "Entity.h"
 
 Scene::Scene()
+	: m_MainCamera(nullptr)
 {
 
 }
@@ -29,33 +31,20 @@ void Scene::OnInit()
 
 void Scene::OnUpdate(float dt)
 {
-	static float rot = 0.0f;
-
-	rot += 90.0f * dt;
-
-	auto view = m_Registry.view<TagComponent, TransformComponent>();
-	for (auto entity : view)
-	{
-		auto [tag, transform] = view.get<TagComponent, TransformComponent>(entity);
-
-		if (tag == L"Box")
-		{
-			transform.SetRotation(Vector3(0.0f, rot, 0.0f));
-		}
-	}
+	
 }
 
 void Scene::OnRender()
 {
-	auto& cameraComponent = m_Registry.get<CameraComponent>(camera);
+	auto& cameraComponent = m_MainCamera->GetComponent<CameraComponent>();
 	cameraComponent.Bind();
 
 	ID3D12DescriptorHeap* ppHeaps[] = { TEXHEAP->GetHeap().Get() };
 	CMD_LIST->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-	auto view = m_Registry.view<MeshRendererComponent, TransformComponent>();
-	for (auto entity : view)
+	auto group = m_Registry.group<MeshRendererComponent>(entt::get<TransformComponent>);
+	for (auto entity : group)
 	{
-		auto [meshRenderer, transform] = view.get<MeshRendererComponent, TransformComponent>(entity);
+		auto [meshRenderer, transform] = group.get<MeshRendererComponent, TransformComponent>(entity);
 		transform.Bind();
 		meshRenderer.Bind();
 	}
@@ -64,15 +53,21 @@ void Scene::OnRender()
 void Scene::OnDestroy()
 {
 	m_Registry.clear();
+
+	for (auto& [_, entity] : m_EntityMap)
+	{
+		delete entity;
+	}
+	m_EntityMap.clear();
 }
 
 void Scene::LoadAssets()
 {
-	camera = m_Registry.create();
-	m_Registry.emplace<CameraComponent>(camera, Vector3(0.0f, 2.0f, -2.0f), Vector3::Backward);
+	m_MainCamera = CreateEntity(L"MainCamera");
+	m_MainCamera->AddComponent<CameraComponent>(Vector3(0.0f, 2.0f, -2.0f), Vector3::Backward);
 
-	m_Box = CreateEntity(L"Box");
-	m_Box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Cube.gpmesh"), ResourceManager::GetTexture(L"Assets/Cube.png"));
+	auto box = CreateEntity(L"Box");
+	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Cube.gpmesh"), ResourceManager::GetTexture(L"Assets/Cube.png"));
 }
 
 void Scene::OnKeyDown(UINT8 keycode)
@@ -103,8 +98,16 @@ void Scene::OnKeyDown(UINT8 keycode)
 
 	if (keycode == VK_RETURN)
 	{
-		m_Registry.destroy(*m_Box);
-		delete m_Box;
+		auto group = m_Registry.group<TagComponent>(entt::get<IDComponent>);
+		for (auto entity : group)
+		{
+			auto [tag, id] = group.get<TagComponent, IDComponent>(entity);
+
+			if (tag == L"Box")
+			{
+				DestroyEntityWithID(id.ID);
+			}
+		}
 	}
 }
 
@@ -118,10 +121,21 @@ Entity* Scene::CreateEntity(const std::wstring& tag)
 	Entity* entity = new Entity(m_Registry.create(), this);
 	entity->AddComponent<TransformComponent>();
 	entity->AddComponent<TagComponent>(tag);
+	auto& id = entity->AddComponent<IDComponent>();
+
+	m_EntityMap[id.ID] = entity;
+
 	return entity;
 }
 
-void Scene::DestroyEntity(Entity entity)
+void Scene::DestroyEntityWithID(MyUUID id)
 {
-	m_Registry.destroy(entity);
+	auto iter = m_EntityMap.find(id);
+
+	if (iter != m_EntityMap.end())
+	{
+		m_Registry.destroy(*(iter->second));
+		delete iter->second;
+		m_EntityMap.erase(iter);
+	}
 }
