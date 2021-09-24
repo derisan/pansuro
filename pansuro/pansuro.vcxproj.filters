@@ -64,6 +64,9 @@
     <ClCompile Include="TextureDescriptorHeap.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -109,6 +112,9 @@
       <Filter>Source Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Components.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
       <Filter>Source Files\Scene</Filter>
     </ClInclude>
   </ItemGroup>

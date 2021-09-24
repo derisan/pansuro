@@ -4,9 +4,6 @@
 
 #include <entt/entt.hpp>
 
-class Mesh;
-class Texture;
-
 class Scene
 {
 public:
@@ -23,7 +20,6 @@ public:
 
 private:
 	void LoadAssets();
-	Mesh* CreateTestMesh();
 
 private:
 	entt::registry m_Registry;
