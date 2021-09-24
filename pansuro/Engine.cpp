@@ -205,10 +205,8 @@ void Engine::LoadAssets()
 	ThrowIfFailed(m_Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
 		m_CmdAllocators[m_FrameIndex].Get(), m_PSO->GetPSO().Get(), IID_PPV_ARGS(&m_CmdList)));
 
-	// Load things here.
 	m_ActiveScene->OnInit();
 
-	// Flush command queue for resource copying.
 	ThrowIfFailed(m_CmdList->Close());
 	ID3D12CommandList* ppCommandLists[] = { m_CmdList.Get() };
 	m_CmdQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
@@ -226,7 +224,6 @@ void Engine::LoadAssets()
 
 	for (auto buffer : m_UsedUploadBuffers)
 	{
-		//SAFE_RELEASE(buffer);
 		if (buffer) 
 			buffer->Release();
 	}

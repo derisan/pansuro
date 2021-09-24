@@ -34,7 +34,7 @@ Texture* ResourceManager::GetTexture(const std::wstring& path)
 	}
 	else
 	{
-		auto tex = Texture::CreateTexture(path);
+		auto tex = Texture::Load(path);
 		if (tex)
 		{
 			m_Textures[path] = tex;

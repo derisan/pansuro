@@ -6,22 +6,15 @@
 
 UINT Texture::s_NumTextures = 0;
 
-Texture* Texture::CreateTexture(const std::wstring& path)
+Texture* Texture::Load(const std::wstring& path)
 {
-	auto tex = new Texture();
-	bool res = tex->LoadTexture(path);
-
-	if (!res) return nullptr;
-	else return tex;
+	return new Texture(path);
 }
 
-Texture::Texture()
+Texture::Texture(const std::wstring& path)
 {
 	m_MyIndex = s_NumTextures++;
-}
 
-bool Texture::LoadTexture(const std::wstring& path)
-{
 	std::wstring ext = std::filesystem::path(path).extension();
 
 	if (ext == L".dds" || ext == L".DDS")
@@ -34,8 +27,7 @@ bool Texture::LoadTexture(const std::wstring& path)
 	HRESULT hr = ::CreateTexture(DEVICE.Get(), m_RawImage.GetMetadata(), &m_Texture);
 	if (FAILED(hr))
 	{
-		MK_ERROR("Failed to load Texture.");
-		return false;
+		MK_ASSERT(nullptr, "Failed to load texture.");
 	}
 
 	std::vector<D3D12_SUBRESOURCE_DATA> subResources;
@@ -49,7 +41,6 @@ bool Texture::LoadTexture(const std::wstring& path)
 	if (FAILED(hr))
 	{
 		MK_ERROR("Failed to load Texture.");
-		return false;
 	}
 
 	const UINT64 bufferSize = ::GetRequiredIntermediateSize(m_Texture.Get(), 0, static_cast<UINT>(subResources.size()));
@@ -69,7 +60,6 @@ bool Texture::LoadTexture(const std::wstring& path)
 	if (FAILED(hr))
 	{
 		MK_ERROR("Failed to load Texture.");
-		return false;
 	}
 
 	::UpdateSubresources(CMD_LIST.Get(),
@@ -92,8 +82,4 @@ bool Texture::LoadTexture(const std::wstring& path)
 	DEVICE->CreateShaderResourceView(m_Texture.Get(), &srvDesc, TEXHEAP->GetCpuHandle(m_MyIndex));
 
 	m_SrvGpuHandle = TEXHEAP->GetGpuHandle(m_MyIndex);
-
-	return true;
 }
-
-

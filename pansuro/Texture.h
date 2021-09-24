@@ -5,13 +5,12 @@
 class Texture
 {
 public:
-	static Texture* CreateTexture(const std::wstring& path);
+	static Texture* Load(const std::wstring& path);
 
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() { return m_SrvGpuHandle; }
 
 private:
-	Texture();
-	bool LoadTexture(const std::wstring& path);
+	Texture(const std::wstring& path);
 
 private:
 	static UINT s_NumTextures;
