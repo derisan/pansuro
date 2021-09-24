@@ -104,6 +104,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureDescriptorHeap.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -122,6 +123,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureDescriptorHeap.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\default.hlsli" />

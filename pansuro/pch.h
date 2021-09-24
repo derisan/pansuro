@@ -37,8 +37,3 @@ using namespace DirectX::SimpleMath;
 #pragma comment(lib, "dxgi")
 #pragma comment(lib, "dxguid")
 #pragma comment(lib, "d3dcompiler")
-
-
-
-#include "d3dHelper.h"
-#include "Log.h"

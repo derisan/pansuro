@@ -1,6 +1,6 @@
 cbuffer cbWorld : register(b0)
 {
-    float3 gOffset;
+    row_major matrix gWorld;
 }
 
 cbuffer cbViewProj : register(b1)
@@ -27,7 +27,8 @@ PSInput VSMain(VSInput input)
 {
     PSInput result;
 
-    result.position = mul(float4(input.position + gOffset, 1.0f), gViewProj);
+    result.position = mul(float4(input.position, 1.0f), gWorld);
+    result.position = mul(result.position, gViewProj);
     result.uv = input.uv;
 
     return result;

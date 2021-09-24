@@ -16,17 +16,3 @@ struct MeshRendererComponent
 	MeshRendererComponent(Mesh* mesh, Texture* tex)
 		: Messi(mesh), Tex(tex) {}
 };
-
-struct TransformComponent
-{
-	Vector3 Position;
-	UploadBuffer<Vector3> CBuffer;
-
-	TransformComponent() = default;
-	TransformComponent(const TransformComponent&) = default;
-	TransformComponent(const Vector3& position)
-		: Position(position)
-	, CBuffer(DEVICE.Get(), 1, true) {}
-
-	operator const D3D12_GPU_VIRTUAL_ADDRESS () const { return CBuffer.GetVirtualAddress(); }
-};

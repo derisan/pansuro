@@ -8,6 +8,7 @@
 #include "ResourceManager.h"
 #include "TextureDescriptorHeap.h"
 #include "CameraComponent.h"
+#include "TransformComponent.h"
 
 Scene::Scene()
 {
@@ -26,11 +27,15 @@ void Scene::OnInit()
 
 void Scene::OnUpdate(float dt)
 {
+	static float rot = 0.0f;
+
+	rot += 90.0f * dt;
+
 	auto view = m_Registry.view<TransformComponent>();
 	for (auto entity : view)
 	{
 		auto& transform = view.get<TransformComponent>(entity);
-		transform.CBuffer.CopyData(0, transform.Position);
+		transform.SetRotation(Vector3(0.0f, rot, 0.0f));
 	}
 }
 
@@ -45,7 +50,7 @@ void Scene::OnRender()
 	for (auto entity : view)
 	{
 		auto [meshRenderer, transform] = view.get<MeshRendererComponent, TransformComponent>(entity);
-		CMD_LIST->SetGraphicsRootConstantBufferView(RP_World, transform);
+		transform.Bind();
 		CMD_LIST->SetGraphicsRootDescriptorTable(RP_Texture, meshRenderer.Tex->GetGpuHandle());
 		SUBMIT(meshRenderer.Messi);
 	}
@@ -60,7 +65,7 @@ void Scene::LoadAssets()
 {
 	auto entt = m_Registry.create();
 	m_Registry.emplace<MeshRendererComponent>(entt, ResourceManager::LoadCubeMesh(), ResourceManager::LoadTexture(L"Assets/Textures/cat.png"));
-	m_Registry.emplace<TransformComponent>(entt, Vector3(0.0f, 0.1f, 0.0f));
+	m_Registry.emplace<TransformComponent>(entt);
 
 	camera = m_Registry.create();
 	m_Registry.emplace<CameraComponent>(camera, Vector3(0.0f, 2.0f, -2.0f), Vector3::Backward);
@@ -74,7 +79,21 @@ void Scene::OnKeyDown(UINT8 keycode)
 		for (auto entity : view)
 		{
 			auto& transform = view.get<TransformComponent>(entity);
-			transform.Position.x += 0.1f;
+			Vector3 pos = transform.GetPosition();
+			pos.x += 0.5f;
+			transform.SetPosition(pos);
+		}
+	}
+
+	if (keycode == VK_LEFT)
+	{
+		auto view = m_Registry.view<TransformComponent>();
+		for (auto entity : view)
+		{
+			auto& transform = view.get<TransformComponent>(entity);
+			Vector3 pos = transform.GetPosition();
+			pos.x -= 0.5f;
+			transform.SetPosition(pos);
 		}
 	}
 }

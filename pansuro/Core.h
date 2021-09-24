@@ -1,6 +1,8 @@
 #pragma once
 
 #include "pch.h"
+#include "d3dHelper.h"
+#include "Log.h"
 
 #define BIT(x) ((1) << (x))
 
