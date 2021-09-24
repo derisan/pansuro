@@ -100,6 +100,12 @@ void Scene::OnKeyDown(UINT8 keycode)
 			transform.SetPosition(pos);
 		}
 	}
+
+	if (keycode == VK_RETURN)
+	{
+		m_Registry.destroy(*m_Box);
+		delete m_Box;
+	}
 }
 
 void Scene::OnKeyUp(UINT8 keycode)

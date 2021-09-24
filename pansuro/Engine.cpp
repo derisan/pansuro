@@ -12,7 +12,7 @@ TextureDescriptorHeap* Engine::s_TextureDescriptorHeap = nullptr;
 Engine::Engine(UINT width, UINT height, std::wstring title)
 	: m_Width(width), m_Height(height), m_Title(title)
 	, m_RtvDescriptorSize(0), m_FrameIndex(0), m_FenceEvent(nullptr)
-	, m_FenceValues{}
+	, m_FenceValue(0)
 	, m_ActiveScene(nullptr)
 {
 	MK_ASSERT(!s_Instance, "Engine's initialized more than once.");
@@ -51,7 +51,7 @@ void Engine::OnInit()
 
 void Engine::OnDestroy()
 {
-	WaitForGpu();
+	WaitForPreviousFrame();
 	CloseHandle(m_FenceEvent);
 
 	if (m_ActiveScene)
@@ -168,9 +168,9 @@ void Engine::LoadPipeline()
 			m_Device->CreateRenderTargetView(m_RenderTargets[n].Get(), nullptr, rtvHandle);
 			rtvHandle.Offset(1, m_RtvDescriptorSize);
 
-			ThrowIfFailed(m_Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_CmdAllocators[n])));
 		}
 	}
+	ThrowIfFailed(m_Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_CmdAllocator)));
 
 	{
 		D3D12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, m_Width, m_Height);
@@ -203,7 +203,7 @@ void Engine::LoadAssets()
 	CreateRootSignature();
 
 	ThrowIfFailed(m_Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
-		m_CmdAllocators[m_FrameIndex].Get(), m_PSO->GetPSO().Get(), IID_PPV_ARGS(&m_CmdList)));
+		m_CmdAllocator.Get(), m_PSO->GetPSO().Get(), IID_PPV_ARGS(&m_CmdList)));
 
 	m_ActiveScene->OnInit();
 
@@ -211,8 +211,8 @@ void Engine::LoadAssets()
 	ID3D12CommandList* ppCommandLists[] = { m_CmdList.Get() };
 	m_CmdQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 
-	ThrowIfFailed(m_Device->CreateFence(m_FenceValues[m_FrameIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_Fence)));
-	m_FenceValues[m_FrameIndex]++;
+	ThrowIfFailed(m_Device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_Fence)));
+	m_FenceValue = 1;
 
 	m_FenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 	if (m_FenceEvent == nullptr)
@@ -220,11 +220,11 @@ void Engine::LoadAssets()
 		ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
 	}
 
-	WaitForGpu();
+	WaitForPreviousFrame();
 
 	for (auto buffer : m_UsedUploadBuffers)
 	{
-		if (buffer) 
+		if (buffer)
 			buffer->Release();
 	}
 }
@@ -256,41 +256,30 @@ void Engine::CreateRootSignature()
 	m_PSO = std::make_unique<PipelineState>(L"Assets/Shaders/shader.hlsli", inputDesc, m_RootSignature);
 }
 
-void Engine::MoveToNextFrame()
+void Engine::WaitForPreviousFrame()
 {
-	const UINT64 currentFenceValue = m_FenceValues[m_FrameIndex];
-	ThrowIfFailed(m_CmdQueue->Signal(m_Fence.Get(), currentFenceValue));
+	const UINT64 fence = m_FenceValue;
+	ThrowIfFailed(m_CmdQueue->Signal(m_Fence.Get(), fence));
+	m_FenceValue++;
 
-	m_FrameIndex = m_SwapChain->GetCurrentBackBufferIndex();
-
-	if (m_Fence->GetCompletedValue() < m_FenceValues[m_FrameIndex])
+	if (m_Fence->GetCompletedValue() < fence)
 	{
-		ThrowIfFailed(m_Fence->SetEventOnCompletion(m_FenceValues[m_FrameIndex], m_FenceEvent));
-		WaitForSingleObjectEx(m_FenceEvent, INFINITE, FALSE);
+		ThrowIfFailed(m_Fence->SetEventOnCompletion(fence, m_FenceEvent));
+		WaitForSingleObject(m_FenceEvent, INFINITE);
 	}
 
-	m_FenceValues[m_FrameIndex] = currentFenceValue + 1;
-}
-
-void Engine::WaitForGpu()
-{
-	ThrowIfFailed(m_CmdQueue->Signal(m_Fence.Get(), m_FenceValues[m_FrameIndex]));
-
-	ThrowIfFailed(m_Fence->SetEventOnCompletion(m_FenceValues[m_FrameIndex], m_FenceEvent));
-	WaitForSingleObjectEx(m_FenceEvent, INFINITE, FALSE);
-
-	m_FenceValues[m_FrameIndex]++;
+	m_FrameIndex = m_SwapChain->GetCurrentBackBufferIndex();
 }
 
 void Engine::BeginRender()
 {
-	ThrowIfFailed(m_CmdAllocators[m_FrameIndex]->Reset());
-	ThrowIfFailed(m_CmdList->Reset(m_CmdAllocators[m_FrameIndex].Get(), m_PSO->GetPSO().Get()));
+	ThrowIfFailed(m_CmdAllocator->Reset());
+	ThrowIfFailed(m_CmdList->Reset(m_CmdAllocator.Get(), m_PSO->GetPSO().Get()));
 
 	m_CmdList->SetGraphicsRootSignature(m_RootSignature.Get());
 	m_CmdList->RSSetViewports(1, &m_Viewport);
 	m_CmdList->RSSetScissorRects(1, &m_ScissorRect);
-	
+
 	const auto toRenderTargetBarrier = CD3DX12_RESOURCE_BARRIER::Transition(m_RenderTargets[m_FrameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 	m_CmdList->ResourceBarrier(1, &toRenderTargetBarrier);
 
@@ -313,5 +302,5 @@ void Engine::EndRender()
 
 	ThrowIfFailed(m_SwapChain->Present(1, 0));
 
-	MoveToNextFrame();
+	WaitForPreviousFrame();
 }

@@ -49,8 +49,7 @@ private:
 	void LoadAssets();
 	void CreateRootSignature();
 
-	void MoveToNextFrame();
-	void WaitForGpu();
+	void WaitForPreviousFrame();
 
 	void BeginRender();
 	void EndRender();
@@ -74,7 +73,7 @@ private:
 	ComPtr<IDXGISwapChain3> m_SwapChain;
 	ComPtr<ID3D12Device> m_Device;
 	ComPtr<ID3D12Resource> m_RenderTargets[kFrameCount];
-	ComPtr<ID3D12CommandAllocator> m_CmdAllocators[kFrameCount];
+	ComPtr<ID3D12CommandAllocator> m_CmdAllocator;
 	ComPtr<ID3D12CommandQueue> m_CmdQueue;
 	ComPtr<ID3D12DescriptorHeap> m_RtvHeap;
 	ComPtr<ID3D12GraphicsCommandList> m_CmdList;
@@ -88,7 +87,7 @@ private:
 	UINT m_RtvDescriptorSize;
 	UINT m_FrameIndex;
 	HANDLE m_FenceEvent;
-	UINT64 m_FenceValues[kFrameCount];
+	UINT64 m_FenceValue;
 
 	std::vector<ComPtr<ID3D12Resource>> m_UsedUploadBuffers;
 
