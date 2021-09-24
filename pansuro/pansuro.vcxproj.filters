@@ -70,6 +70,9 @@
     <ClCompile Include="TransformComponent.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="MeshRendererComponent.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -114,13 +117,13 @@
     <ClInclude Include="TextureDescriptorHeap.h">
       <Filter>Source Files\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Components.h">
-      <Filter>Source Files\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="CameraComponent.h">
       <Filter>Source Files\Scene</Filter>
     </ClInclude>
     <ClInclude Include="TransformComponent.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRendererComponent.h">
       <Filter>Source Files\Scene</Filter>
     </ClInclude>
   </ItemGroup>

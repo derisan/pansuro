@@ -2,13 +2,13 @@
 #include "Scene.h"
 
 #include "Engine.h"
-#include "Components.h"
 #include "Texture.h"
 #include "Mesh.h"
 #include "ResourceManager.h"
 #include "TextureDescriptorHeap.h"
 #include "CameraComponent.h"
 #include "TransformComponent.h"
+#include "MeshRendererComponent.h"
 
 Scene::Scene()
 {
@@ -51,8 +51,7 @@ void Scene::OnRender()
 	{
 		auto [meshRenderer, transform] = view.get<MeshRendererComponent, TransformComponent>(entity);
 		transform.Bind();
-		CMD_LIST->SetGraphicsRootDescriptorTable(RP_Texture, meshRenderer.Tex->GetGpuHandle());
-		SUBMIT(meshRenderer.Messi);
+		meshRenderer.Bind();
 	}
 }
 
@@ -64,7 +63,7 @@ void Scene::OnDestroy()
 void Scene::LoadAssets()
 {
 	auto entt = m_Registry.create();
-	m_Registry.emplace<MeshRendererComponent>(entt, ResourceManager::LoadCubeMesh(), ResourceManager::LoadTexture(L"Assets/Textures/cat.png"));
+	m_Registry.emplace<MeshRendererComponent>(entt, ResourceManager::LoadCubeMesh(), ResourceManager::LoadTexture(L"Assets/Textures/veigar.jpg"));
 	m_Registry.emplace<TransformComponent>(entt);
 
 	camera = m_Registry.create();

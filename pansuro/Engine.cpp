@@ -2,7 +2,6 @@
 #include "Engine.h"
 
 #include "Application.h"
-#include "Mesh.h"
 #include "Scene.h"
 #include "TextureDescriptorHeap.h"
 #include "Timer.h"
@@ -101,14 +100,6 @@ void Engine::OnKeyDown(UINT8 keycode)
 void Engine::OnKeyUp(UINT8 keycode)
 {
 	m_ActiveScene->OnKeyUp(keycode);
-}
-
-void Engine::Submit(Mesh* mesh)
-{
-	m_CmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	m_CmdList->IASetVertexBuffers(0, 1, mesh->GetVertexBufferView());
-	m_CmdList->IASetIndexBuffer(mesh->GetIndexBufferView());
-	m_CmdList->DrawIndexedInstanced(mesh->GetIndexCount(), 1, 0, 0, 0);
 }
 
 void Engine::LoadPipeline()
