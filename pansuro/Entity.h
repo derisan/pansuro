@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Scene.h"
+#include "MyUUID.h"
+#include "IDComponent.h"
 
 class Entity
 {
@@ -47,6 +49,8 @@ public:
 	{
 		return !(*this == other);
 	}
+
+	MyUUID GetUUID() { return GetComponent<IDComponent>().ID; }
 
 private:
 	entt::entity m_EntityHandle = entt::null;
