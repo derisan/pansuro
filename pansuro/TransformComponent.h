@@ -6,7 +6,7 @@ class TransformComponent
 {
 public:
 	TransformComponent();
-	TransformComponent(const Vector3& position, const Vector3& rotation, float scale = 1.0f);
+	TransformComponent(const Vector3& position, const Vector3& rotation = Vector3::Zero, float scale = 1.0f);
 	~TransformComponent();
 
 	void Bind();
