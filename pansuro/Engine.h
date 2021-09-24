@@ -8,6 +8,13 @@ class Mesh;
 class Scene;
 class TextureDescriptorHeap;
 
+enum RootParam
+{
+	RP_World,
+	RP_ViewProj,
+	RP_Texture,
+};
+
 class Engine
 {
 public:
