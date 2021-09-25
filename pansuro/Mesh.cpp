@@ -56,7 +56,7 @@ Mesh* Mesh::Load(const std::wstring& path)
 	for (rapidjson::SizeType i = 0; i < vertsJson.Size(); i++)
 	{
 		const rapidjson::Value& vert = vertsJson[i];
-		if (!vert.IsArray() || vert.Size() != 8)
+		if (!vert.IsArray() || vert.Size() != 16)
 		{
 			MK_ASSERT(nullptr, "Unknown vertex format.");
 		}
@@ -64,13 +64,24 @@ Mesh* Mesh::Load(const std::wstring& path)
 		Vertex v;
 
 		v.Position.x = vert[0].GetFloat();
-		v.Position.y = vert[1].GetFloat();
-		v.Position.z = vert[2].GetFloat();
+		v.Position.y = vert[2].GetFloat();
+		v.Position.z = vert[1].GetFloat();
 		v.Normal.x = vert[3].GetFloat();
 		v.Normal.y = vert[4].GetFloat();
 		v.Normal.z = vert[5].GetFloat();
-		v.UV.x = vert[6].GetFloat();
-		v.UV.y = vert[7].GetFloat();
+
+		v.Bone[0] = vert[6].GetUint();
+		v.Bone[1] = vert[7].GetUint();
+		v.Bone[2] = vert[8].GetUint();
+		v.Bone[3] = vert[9].GetUint();
+		
+		v.Weight.x = vert[10].GetFloat() / 255.0f;
+		v.Weight.y = vert[11].GetFloat() / 255.0f;
+		v.Weight.z = vert[12].GetFloat() / 255.0f;
+		v.Weight.w = vert[13].GetFloat() / 255.0f;
+
+		v.UV.x = vert[14].GetFloat();
+		v.UV.y = vert[15].GetFloat();
 
 		vertices.push_back(std::move(v));
 	}

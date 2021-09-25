@@ -31,7 +31,17 @@ void Scene::OnInit()
 
 void Scene::OnUpdate(float dt)
 {
-	
+	static float rot;
+
+	rot += 90.0f * dt;
+
+	auto view = m_Registry.view<TransformComponent>();
+	for (auto entity : view)
+	{
+		auto& transform = view.get<TransformComponent>(entity);
+
+		transform.SetRotation(Vector3(0.0f, rot, 0.0f));
+	}
 }
 
 void Scene::OnRender()
@@ -64,10 +74,10 @@ void Scene::OnDestroy()
 void Scene::LoadAssets()
 {
 	m_MainCamera = CreateEntity(L"MainCamera");
-	m_MainCamera->AddComponent<CameraComponent>(Vector3(0.0f, 2.0f, -2.0f), Vector3::Backward);
+	m_MainCamera->AddComponent<CameraComponent>(Vector3(0.0f, 100.0f, -500.0f), Vector3::Backward);
 
 	auto box = CreateEntity(L"Box");
-	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Cube.gpmesh"), ResourceManager::GetTexture(L"Assets/Cube.png"));
+	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/CatWarrior.gpmesh"), ResourceManager::GetTexture(L"Assets/CatWarrior.png"));
 }
 
 void Scene::OnKeyDown(UINT8 keycode)

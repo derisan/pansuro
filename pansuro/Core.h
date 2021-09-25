@@ -16,6 +16,8 @@ struct Vertex
 {
 	Vector3 Position;
 	Vector3 Normal;
+	UINT Bone[4];
+	Vector4 Weight;
 	Vector2 UV;
 };
 
