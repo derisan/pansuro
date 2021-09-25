@@ -104,6 +104,7 @@
     <ClCompile Include="PipelineState.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="TagComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureDescriptorHeap.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="PipelineState.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Skeleton.h" />
     <ClInclude Include="TagComponent.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureDescriptorHeap.h" />

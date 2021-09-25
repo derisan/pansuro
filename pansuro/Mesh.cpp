@@ -29,7 +29,7 @@ Mesh* Mesh::Load(const std::wstring& path)
 
 	if (!doc.IsObject())
 	{
-		MK_ASSERT(nullptr, "Is not valid json file.");
+		MK_ASSERT(nullptr, "It's not valid json file.");
 	}
 
 	const rapidjson::Value& textures = doc["textures"];

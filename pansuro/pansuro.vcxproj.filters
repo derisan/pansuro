@@ -88,6 +88,9 @@
     <ClCompile Include="MyUUID.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -152,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="MyUUID.h">
       <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>Source Files\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

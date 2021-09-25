@@ -12,6 +12,8 @@
 #define MK_ASSERT(x, ...) 
 #endif // MK_DEBUG
 
+constexpr unsigned int MAX_SKELETON_BONES = 96;
+
 struct Vertex
 {
 	Vector3 Position;
@@ -19,6 +21,36 @@ struct Vertex
 	UINT Bone[4];
 	Vector4 Weight;
 	Vector2 UV;
+};
+
+struct BoneTransform
+{
+	Vector3 Translation;
+	Quaternion Rotation;
+	
+	Matrix ToMatrix() const
+	{
+		Matrix mat = Matrix::CreateTranslation(Translation);
+		mat *= Matrix::CreateFromQuaternion(Rotation);
+
+		return mat;
+	}
+
+	static BoneTransform Interpolate(const BoneTransform& a, const BoneTransform& b, float f)
+	{
+		BoneTransform ret;
+		ret.Rotation = Quaternion::Slerp(a.Rotation, b.Rotation, f);
+		ret.Translation = Vector3::Lerp(a.Translation, b.Translation, f);
+
+		return ret;
+	}
+};
+
+struct Bone
+{
+	BoneTransform LocalBindPose;
+	std::string Name;
+	int Parent;
 };
 
 inline std::wstring s2ws(const std::string& s)
