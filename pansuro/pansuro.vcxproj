@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -113,6 +114,7 @@
     <ClCompile Include="MyUUID.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="Core.h" />

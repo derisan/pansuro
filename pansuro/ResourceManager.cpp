@@ -4,10 +4,12 @@
 #include "Mesh.h"
 #include "Texture.h"
 #include "Skeleton.h"
+#include "Animation.h"
 
 std::unordered_map<std::wstring, Mesh*> ResourceManager::m_Meshes;
 std::unordered_map<std::wstring, Texture*> ResourceManager::m_Textures;
 std::unordered_map<std::wstring, Skeleton*> ResourceManager::m_Skeletons;
+std::unordered_map<std::wstring, Animation*> ResourceManager::m_Animations;
 
 Mesh* ResourceManager::GetMesh(const std::wstring& path)
 {
@@ -61,5 +63,23 @@ Skeleton* ResourceManager::GetSkeleton(const std::wstring& path)
 			m_Skeletons[path] = skel;
 		}
 		return skel;
+	}
+}
+
+Animation* ResourceManager::GetAnimation(const std::wstring& path)
+{
+	auto iter = m_Animations.find(path);
+	if (iter != m_Animations.end())
+	{
+		return iter->second;
+	}
+	else
+	{
+		auto anim = Animation::Load(path);
+		if (anim)
+		{
+			m_Animations[path] = anim;
+		}
+		return anim;
 	}
 }
