@@ -30,8 +30,8 @@ struct BoneTransform
 	
 	Matrix ToMatrix() const
 	{
-		Matrix mat = Matrix::CreateTranslation(Translation);
-		mat *= Matrix::CreateFromQuaternion(Rotation);
+		Matrix mat = Matrix::CreateFromQuaternion(Rotation);
+		mat *= Matrix::CreateTranslation(Translation); 
 
 		return mat;
 	}
@@ -51,6 +51,11 @@ struct Bone
 	BoneTransform LocalBindPose;
 	std::string Name;
 	int Parent;
+};
+
+struct MatrixPalette
+{
+	Matrix Entry[MAX_SKELETON_BONES];
 };
 
 inline std::wstring s2ws(const std::string& s)

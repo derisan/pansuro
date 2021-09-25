@@ -12,6 +12,9 @@
 #include "IDComponent.h"
 #include "TagComponent.h"
 #include "Entity.h"
+#include "Animation.h"
+#include "Skeleton.h"
+#include "AnimatorComponent.h"
 
 Scene::Scene()
 	: m_MainCamera(nullptr)
@@ -35,12 +38,11 @@ void Scene::OnUpdate(float dt)
 
 	rot += 90.0f * dt;
 
-	auto view = m_Registry.view<TransformComponent>();
+	auto view = m_Registry.view<AnimatorComponent>();
 	for (auto entity : view)
 	{
-		auto& transform = view.get<TransformComponent>(entity);
-
-		transform.SetRotation(Vector3(0.0f, rot, 0.0f));
+		auto& animator = view.get<AnimatorComponent>(entity);
+		animator.Update(dt);
 	}
 }
 
@@ -51,10 +53,12 @@ void Scene::OnRender()
 
 	ID3D12DescriptorHeap* ppHeaps[] = { TEXHEAP->GetHeap().Get() };
 	CMD_LIST->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-	auto group = m_Registry.group<MeshRendererComponent>(entt::get<TransformComponent>);
+	auto group = m_Registry.group<MeshRendererComponent, AnimatorComponent>(entt::get<TransformComponent>);
 	for (auto entity : group)
 	{
 		auto [meshRenderer, transform] = group.get<MeshRendererComponent, TransformComponent>(entity);
+		auto& animator = group.get<AnimatorComponent>(entity);
+		animator.Bind();
 		transform.Bind();
 		meshRenderer.Bind();
 	}
@@ -78,6 +82,8 @@ void Scene::LoadAssets()
 
 	auto box = CreateEntity(L"Box");
 	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/CatWarrior.gpmesh"), ResourceManager::GetTexture(L"Assets/CatWarrior.png"));
+	auto& animComponent = box->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/CatWarrior.gpskel"));
+	animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/CatActionIdle.gpanim"));
 }
 
 void Scene::OnKeyDown(UINT8 keycode)

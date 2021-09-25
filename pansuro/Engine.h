@@ -13,6 +13,7 @@ enum RootParam
 	RP_World,
 	RP_ViewProj,
 	RP_Texture,
+	RP_BoneTransform,
 };
 
 class Engine

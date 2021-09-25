@@ -14,7 +14,7 @@ public:
 	float GetDuration() const { return m_Duration; }
 	float GetFrameDuration() const { return m_FrameDuration; }
 
-	void GetGlobalPoseAtTime(std::vector<Matrix>& outPoses, const Skeleton* inSkeleton, float inTime) const;
+	void GetGlobalPoseAtTime(std::vector<Matrix>& outPoses, Skeleton* inSkeleton, float inTime) const;
 
 private:
 	UINT m_NumBones;

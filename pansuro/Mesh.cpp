@@ -64,8 +64,8 @@ Mesh* Mesh::Load(const std::wstring& path)
 		Vertex v;
 
 		v.Position.x = vert[0].GetFloat();
-		v.Position.y = vert[2].GetFloat();
-		v.Position.z = vert[1].GetFloat();
+		v.Position.y = vert[1].GetFloat();
+		v.Position.z = vert[2].GetFloat();
 		v.Normal.x = vert[3].GetFloat();
 		v.Normal.y = vert[4].GetFloat();
 		v.Normal.z = vert[5].GetFloat();
