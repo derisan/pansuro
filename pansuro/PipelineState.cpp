@@ -28,6 +28,7 @@ PipelineState::PipelineState(const std::wstring& shaderFilename,
 	psoDesc.VS = CD3DX12_SHADER_BYTECODE(vertexShader.Get());
 	psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader.Get());
 	psoDesc.RasterizerState = rasterizerState;
+	psoDesc.RasterizerState.FrontCounterClockwise = TRUE;
 	psoDesc.BlendState = blendState;
 	psoDesc.DepthStencilState = depthStencilState;
 	psoDesc.SampleMask = UINT_MAX;

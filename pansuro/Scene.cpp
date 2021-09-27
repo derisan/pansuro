@@ -36,13 +36,14 @@ void Scene::OnUpdate(float dt)
 {
 	static float rot;
 
-	rot += 90.0f * dt;
+	rot += 30.0f * dt;
 
-	auto view = m_Registry.view<AnimatorComponent>();
+	auto view = m_Registry.view<AnimatorComponent, TransformComponent>();
 	for (auto entity : view)
 	{
-		auto& animator = view.get<AnimatorComponent>(entity);
+		auto [animator, transform] = view.get<AnimatorComponent, TransformComponent>(entity);
 		animator.Update(dt);
+		transform.SetRotation(Vector3(0.0f, rot, 0.0f));
 	}
 }
 
@@ -78,12 +79,12 @@ void Scene::OnDestroy()
 void Scene::LoadAssets()
 {
 	m_MainCamera = CreateEntity(L"MainCamera");
-	m_MainCamera->AddComponent<CameraComponent>(Vector3(0.0f, 100.0f, -500.0f), Vector3::Backward);
+	m_MainCamera->AddComponent<CameraComponent>(Vector3(0.0f, 100.0f, -300.0f), Vector3::Backward);
 
 	auto box = CreateEntity(L"Box");
-	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/CatWarrior.gpmesh"), ResourceManager::GetTexture(L"Assets/CatWarrior.png"));
-	auto& animComponent = box->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/CatWarrior.gpskel"));
-	animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/CatActionIdle.gpanim"));
+	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Idle.gpmesh"), ResourceManager::GetTexture(L"Assets/Idle.png"));
+	auto& animComponent = box->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Idle.gpskel"));
+	animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Idle.gpanim"));
 }
 
 void Scene::OnKeyDown(UINT8 keycode)
