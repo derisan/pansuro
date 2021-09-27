@@ -82,9 +82,9 @@ void Scene::LoadAssets()
 	m_MainCamera->AddComponent<CameraComponent>(Vector3(0.0f, 100.0f, -300.0f), Vector3::Backward);
 
 	auto box = CreateEntity(L"Box");
-	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Idle.gpmesh"), ResourceManager::GetTexture(L"Assets/Idle.png"));
-	auto& animComponent = box->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Idle.gpskel"));
-	animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Idle.gpanim"));
+	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
+	auto& animComponent = box->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
+	animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Run.gpanim"));
 }
 
 void Scene::OnKeyDown(UINT8 keycode)
