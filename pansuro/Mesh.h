@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Core.h"
+#include "Resource.h"
 
-class Mesh
+class Mesh : public IResource
 {
 public:
 	D3D12_VERTEX_BUFFER_VIEW* GetVertexBufferView() { return &m_VertexBufferView; }
@@ -10,12 +11,9 @@ public:
 
 	UINT GetIndexCount() const { return m_IndexCount; }
 
-	static Mesh* Load(const std::wstring& path);
+	virtual void Load(const std::wstring& path) override;
 
 private:
-	Mesh(const std::vector<Vertex>& vertices,
-		const std::vector<UINT>& indices);
-
 	void CreateVertexBuffer(const std::vector<Vertex>& vertices);
 	void CreateIndexBuffer(const std::vector<UINT>& indices);
 

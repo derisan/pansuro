@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Core.h"
+#include "Resource.h"
 
-class Skeleton
+class Skeleton : public IResource
 {
 public:
-	static Skeleton* Load(const std::wstring& path);
+	virtual void Load(const std::wstring& path) override;
 
 	UINT GetNumBones() const { return m_Bones.size(); }
 	const Bone& GetBone(UINT idx) const { return m_Bones[idx]; }
@@ -13,7 +14,6 @@ public:
 	const std::vector<Matrix> GetGlobalInvBindPoses() const { return m_GlobalInvBindPoses; }
 
 private:
-	Skeleton() = default;
 	void ComputeGlobalInvBindPose();
 
 private:

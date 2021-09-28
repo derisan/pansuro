@@ -6,13 +6,7 @@
 
 #include <rapidjson/document.h>
 
-Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<UINT>& indices)
-{
-	CreateVertexBuffer(vertices);
-	CreateIndexBuffer(indices);
-}
-
-Mesh* Mesh::Load(const std::wstring& path)
+void Mesh::Load(const std::wstring& path)
 {
 	std::ifstream file(path);
 	if (!file.is_open())
@@ -107,7 +101,8 @@ Mesh* Mesh::Load(const std::wstring& path)
 		indices.emplace_back(ind[2].GetUint());
 	}
 
-	return new Mesh(vertices, indices);
+	CreateVertexBuffer(vertices);
+	CreateIndexBuffer(indices);
 }
 
 void Mesh::CreateVertexBuffer(const std::vector<Vertex>& vertices)

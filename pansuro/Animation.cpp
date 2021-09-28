@@ -4,7 +4,7 @@
 
 #include <rapidjson/document.h>
 
-Animation* Animation::Load(const std::wstring& path)
+void Animation::Load(const std::wstring& path)
 {
 	std::ifstream file(path);
 
@@ -25,20 +25,17 @@ Animation* Animation::Load(const std::wstring& path)
 		MK_ASSERT(nullptr, "It's not valid json file.");
 	}
 
-	Animation* anim = new Animation();
-
 	const rapidjson::Value& sequence = doc["sequence"];
-
 	const rapidjson::Value& frames = sequence["frames"];
 	const rapidjson::Value& length = sequence["length"];
 	const rapidjson::Value& bonecount = sequence["bonecount"];
 
-	anim->m_NumFrames = frames.GetUint();
-	anim->m_Duration = length.GetFloat();
-	anim->m_NumBones = bonecount.GetUint();
-	anim->m_FrameDuration = anim->m_Duration / (anim->m_NumFrames - 1);
+	m_NumFrames = frames.GetUint();
+	m_Duration = length.GetFloat();
+	m_NumBones = bonecount.GetUint();
+	m_FrameDuration = m_Duration / (m_NumFrames - 1);
 
-	anim->m_Tracks.resize(anim->m_NumBones);
+	m_Tracks.resize(m_NumBones);
 
 	const rapidjson::Value& tracks = sequence["tracks"];
 
@@ -64,11 +61,9 @@ Animation* Animation::Load(const std::wstring& path)
 			temp.Translation.y = trans[1].GetFloat();
 			temp.Translation.z = trans[2].GetFloat();
 
-			anim->m_Tracks[boneIndex].emplace_back(temp);
+			m_Tracks[boneIndex].emplace_back(temp);
 		}
 	}
-
-	return anim;
 }
 
 void Animation::GetGlobalPoseAtTime(std::vector<Matrix>& outPoses, Skeleton* inSkeleton, float inTime) const

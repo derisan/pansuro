@@ -3,7 +3,7 @@
 
 #include <rapidjson/document.h>
 
-Skeleton* Skeleton::Load(const std::wstring& path)
+void Skeleton::Load(const std::wstring& path)
 {
 	std::ifstream file(path);
 
@@ -37,8 +37,7 @@ Skeleton* Skeleton::Load(const std::wstring& path)
 		MK_ASSERT(nullptr, "Skel exceeds maximum bone count.");
 	}
 
-	Skeleton* skel = new Skeleton();
-	skel->m_Bones.reserve(count);
+	m_Bones.reserve(count);
 
 	const rapidjson::Value& bones = doc["bones"];
 	if (!bones.IsArray())
@@ -80,12 +79,10 @@ Skeleton* Skeleton::Load(const std::wstring& path)
 		temp.LocalBindPose.Translation.y = trans[1].GetFloat();
 		temp.LocalBindPose.Translation.z = trans[2].GetFloat();
 
-		skel->m_Bones.emplace_back(std::move(temp));
+		m_Bones.emplace_back(std::move(temp));
 	}
 
-	skel->ComputeGlobalInvBindPose();
-
-	return skel;
+	ComputeGlobalInvBindPose();
 }
 
 void Skeleton::ComputeGlobalInvBindPose()

@@ -6,15 +6,8 @@
 
 UINT Texture::s_NumTextures = 0;
 
-Texture* Texture::Load(const std::wstring& path)
+void Texture::Load(const std::wstring& path)
 {
-	return new Texture(path);
-}
-
-Texture::Texture(const std::wstring& path)
-{
-	m_MyIndex = s_NumTextures++;
-
 	std::wstring ext = std::filesystem::path(path).extension();
 
 	if (ext == L".dds" || ext == L".DDS")
@@ -78,6 +71,8 @@ Texture::Texture(const std::wstring& path)
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.Texture2D.MipLevels = 1;
+
+	m_MyIndex = s_NumTextures++;
 
 	DEVICE->CreateShaderResourceView(m_Texture.Get(), &srvDesc, TEXHEAP->GetCpuHandle(m_MyIndex));
 

@@ -1,16 +1,14 @@
 #pragma once
 
 #include "Core.h"
+#include "Resource.h"
 
-class Texture
+class Texture : public IResource
 {
 public:
-	static Texture* Load(const std::wstring& path);
+	virtual void Load(const std::wstring& path) override;
 
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() { return m_SrvGpuHandle; }
-
-private:
-	Texture(const std::wstring& path);
 
 private:
 	static UINT s_NumTextures;

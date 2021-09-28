@@ -189,6 +189,9 @@
     <ClInclude Include="CharacterMovement.h">
       <Filter>Source Files\Test</Filter>
     </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Source Files\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\skinned.hlsli">

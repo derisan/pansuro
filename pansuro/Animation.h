@@ -2,12 +2,14 @@
 
 #include "Core.h"
 
+#include "Resource.h"
+
 class Skeleton;
 
-class Animation
+class Animation : public IResource
 {
 public:
-	static Animation* Load(const std::wstring& path);
+	virtual void Load(const std::wstring& path) override;
 
 	UINT GetNumBones() const { return m_NumBones; }
 	UINT GetNumFrames() const { return m_NumFrames; }
