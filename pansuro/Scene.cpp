@@ -15,6 +15,8 @@
 #include "Animation.h"
 #include "Skeleton.h"
 #include "AnimatorComponent.h"
+#include "CharacterMovement.h"
+#include "ScriptComponent.h"
 
 Scene::Scene()
 	: m_MainCamera(nullptr)
@@ -29,21 +31,33 @@ Scene::~Scene()
 
 void Scene::OnInit()
 {
-	LoadAssets();
+
 }
 
 void Scene::OnUpdate(float dt)
 {
-	static float rot;
-
-	rot += 30.0f * dt;
-
-	auto view = m_Registry.view<AnimatorComponent, TransformComponent>();
-	for (auto entity : view)
 	{
-		auto [animator, transform] = view.get<AnimatorComponent, TransformComponent>(entity);
-		animator.Update(dt);
-		transform.SetRotation(Vector3(0.0f, rot, 0.0f));
+		auto view = m_Registry.view<ScriptComponent>();
+		for (auto entity : view)
+		{
+			auto& sc = view.get<ScriptComponent>(entity);
+
+			if (sc.bCreated == false)
+			{
+				sc.OnCreate();
+			}
+
+			sc.OnUpdate(dt);
+		}
+	}
+
+	{
+		auto view = m_Registry.view<AnimatorComponent>();
+		for (auto entity : view)
+		{
+			auto& animator = view.get<AnimatorComponent>(entity);
+			animator.Update(dt);
+		}
 	}
 }
 
@@ -83,49 +97,14 @@ void Scene::LoadAssets()
 
 	auto box = CreateEntity(L"Box");
 	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
+	box->AddComponent<ScriptComponent>(new CharacterMovement(box, 45.0f));
 	auto& animComponent = box->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
 	animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Run.gpanim"));
 }
 
 void Scene::OnKeyDown(UINT8 keycode)
 {
-	if (keycode == VK_RIGHT)
-	{
-		auto view = m_Registry.view<TransformComponent>();
-		for (auto entity : view)
-		{
-			auto& transform = view.get<TransformComponent>(entity);
-			Vector3 pos = transform.GetPosition();
-			pos.x += 0.5f;
-			transform.SetPosition(pos);
-		}
-	}
 
-	if (keycode == VK_LEFT)
-	{
-		auto view = m_Registry.view<TransformComponent>();
-		for (auto entity : view)
-		{
-			auto& transform = view.get<TransformComponent>(entity);
-			Vector3 pos = transform.GetPosition();
-			pos.x -= 0.5f;
-			transform.SetPosition(pos);
-		}
-	}
-
-	if (keycode == VK_RETURN)
-	{
-		auto group = m_Registry.group<TagComponent>(entt::get<IDComponent>);
-		for (auto entity : group)
-		{
-			auto [tag, id] = group.get<TagComponent, IDComponent>(entity);
-
-			if (tag == L"Box")
-			{
-				DestroyEntityWithID(id.ID);
-			}
-		}
-	}
 }
 
 void Scene::OnKeyUp(UINT8 keycode)

@@ -22,6 +22,11 @@ public:
 		return !(*this == other);
 	}
 
+	bool operator!=(const std::wstring& tag) const
+	{
+		return !(*this == tag);
+	}
+
 private:
 	std::wstring m_Tag;
 };

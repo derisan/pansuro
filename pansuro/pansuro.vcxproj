@@ -106,6 +106,8 @@
     <ClCompile Include="PipelineState.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Script.cpp" />
+    <ClCompile Include="ScriptComponent.cpp" />
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="TagComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -119,6 +121,7 @@
     <ClInclude Include="AnimatorComponent.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="CameraComponent.h" />
+    <ClInclude Include="CharacterMovement.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="d3dHelper.h" />
     <ClInclude Include="d3dx12.h" />
@@ -132,6 +135,8 @@
     <ClInclude Include="PipelineState.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Script.h" />
+    <ClInclude Include="ScriptComponent.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="TagComponent.h" />
     <ClInclude Include="Texture.h" />

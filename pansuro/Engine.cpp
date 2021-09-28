@@ -47,6 +47,8 @@ void Engine::OnInit()
 	CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
 	LoadPipeline();
 	LoadAssets();
+
+	m_ActiveScene->OnInit();
 }
 
 void Engine::OnDestroy()
@@ -205,7 +207,7 @@ void Engine::LoadAssets()
 	ThrowIfFailed(m_Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
 		m_CmdAllocator.Get(), m_PSO->GetPSO().Get(), IID_PPV_ARGS(&m_CmdList)));
 
-	m_ActiveScene->OnInit();
+	m_ActiveScene->LoadAssets();
 
 	ThrowIfFailed(m_CmdList->Close());
 	ID3D12CommandList* ppCommandLists[] = { m_CmdList.Get() };

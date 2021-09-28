@@ -54,6 +54,11 @@ public:
 	MyUUID GetUUID() { return GetComponent<IDComponent>().ID; }
 	TransformComponent& Tranfrom() { return GetComponent<TransformComponent>(); }
 
+	void Destroy()
+	{
+		m_Scene->DestroyEntityWithID(GetComponent<IDComponent>().ID);
+	}
+
 private:
 	entt::entity m_EntityHandle = entt::null;
 	Scene* m_Scene = nullptr;

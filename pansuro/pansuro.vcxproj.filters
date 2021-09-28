@@ -29,6 +29,9 @@
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{97fcc84c-8203-4161-a0aa-4b9e3fa30825}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Test">
+      <UniqueIdentifier>{385a3d4f-7406-469a-b848-079659a60e55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -96,6 +99,12 @@
     </ClCompile>
     <ClCompile Include="AnimatorComponent.cpp">
       <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Script.cpp">
+      <Filter>Source Files\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +179,15 @@
     </ClInclude>
     <ClInclude Include="AnimatorComponent.h">
       <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Script.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterMovement.h">
+      <Filter>Source Files\Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

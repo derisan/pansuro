@@ -24,7 +24,6 @@ public:
 	Entity* CreateEntity(const std::wstring& tag = L"default");
 	void DestroyEntityWithID(MyUUID id);
 
-private:
 	void LoadAssets();
 
 private:
