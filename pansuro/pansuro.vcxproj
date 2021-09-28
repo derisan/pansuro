@@ -146,8 +146,8 @@
     <ClInclude Include="MyUUID.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Shaders\skinned.hlsli" />
     <None Include="Assets\Shaders\default.hlsli" />
-    <None Include="Assets\Shaders\shader.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

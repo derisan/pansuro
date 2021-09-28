@@ -258,7 +258,7 @@ void Engine::CreateRootSignature()
 	inputDesc.push_back({ "WEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 40, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 });
 	inputDesc.push_back({ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 56, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 });
 
-	m_PSO = std::make_unique<PipelineState>(L"Assets/Shaders/default.hlsli", inputDesc, m_RootSignature);
+	m_PSO = std::make_unique<PipelineState>(L"Assets/Shaders/skinned.hlsli", inputDesc, m_RootSignature);
 }
 
 void Engine::WaitForPreviousFrame()

@@ -191,10 +191,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shaders\default.hlsli">
+    <None Include="Assets\Shaders\skinned.hlsli">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Assets\Shaders\shader.hlsli">
+    <None Include="Assets\Shaders\default.hlsli">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
