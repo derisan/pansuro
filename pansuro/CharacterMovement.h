@@ -20,10 +20,10 @@ public:
 
 	virtual void OnUpdate(float dt) override
 	{
-		static float rot = 0.0f;
+		auto rot = transform.GetRotation();
 
-		rot += m_Speed * dt;
-		transform.SetRotation(Vector3(0.0f, rot, 0.0f));
+		rot.y += m_Speed * dt;
+		transform.SetRotation(rot);
 	}
 
 	virtual void OnDestroy() override

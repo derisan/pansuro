@@ -43,6 +43,9 @@ public:
 	static Engine* GetEngine() { return s_Instance; }
 	static TextureDescriptorHeap* GetTexHeap() { return s_TextureDescriptorHeap; }
 
+	ComPtr<ID3D12PipelineState> GetSkinnedPSO() { return m_SkinnedPSO->GetPSO(); }
+	ComPtr<ID3D12PipelineState> GetDefaultPSO() { return m_DefaultPSO->GetPSO(); }
+
 private:
 	Engine(UINT width, UINT height, std::wstring title);
 
@@ -83,7 +86,8 @@ private:
 	ComPtr<ID3D12Resource> m_DsvBuffer;
 	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
 
-	std::unique_ptr<PipelineState> m_PSO;
+	std::unique_ptr<PipelineState> m_SkinnedPSO;
+	std::unique_ptr<PipelineState> m_DefaultPSO;
 
 	UINT m_RtvDescriptorSize;
 	UINT m_FrameIndex;

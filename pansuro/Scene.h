@@ -32,6 +32,7 @@ private:
 	std::unordered_map<MyUUID, Entity*> m_EntityMap;
 
 	Entity* m_MainCamera;
+	Entity* m_Box;
 
 	friend class Entity;
 };

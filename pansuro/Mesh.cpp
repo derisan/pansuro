@@ -4,8 +4,6 @@
 #include "Engine.h"
 #include "ResourceManager.h"
 
-#include <rapidjson/document.h>
-
 void Mesh::Load(const std::wstring& path)
 {
 	std::ifstream file(path);
@@ -38,6 +36,24 @@ void Mesh::Load(const std::wstring& path)
 		ResourceManager::GetTexture(s2ws(texName));
 	}
 
+	std::string vertexFormat = doc["vertexformat"].GetString();
+	
+	if (vertexFormat == "PosNormTex")
+	{
+		LoadStaticMesh(doc);
+	}
+	else if (vertexFormat == "PosNormSkinTex")
+	{
+		LoadSkeletalMesh(doc);
+	}
+	else
+	{
+		MK_ASSERT(nullptr, "Unkown vertex format");
+	}
+}
+
+void Mesh::LoadStaticMesh(const rapidjson::Document& doc)
+{
 	const rapidjson::Value& vertsJson = doc["vertices"];
 	if (!vertsJson.IsArray() || vertsJson.Size() < 1)
 	{
@@ -50,7 +66,7 @@ void Mesh::Load(const std::wstring& path)
 	for (rapidjson::SizeType i = 0; i < vertsJson.Size(); i++)
 	{
 		const rapidjson::Value& vert = vertsJson[i];
-		if (!vert.IsArray() || vert.Size() != 16)
+		if (!vert.IsArray() || vert.Size() != 8)
 		{
 			MK_ASSERT(nullptr, "Unknown vertex format.");
 		}
@@ -63,12 +79,70 @@ void Mesh::Load(const std::wstring& path)
 		v.Normal.x = vert[3].GetFloat();
 		v.Normal.y = vert[4].GetFloat();
 		v.Normal.z = vert[5].GetFloat();
+		v.UV.x = vert[6].GetFloat();
+		v.UV.y = vert[7].GetFloat();
+
+		vertices.push_back(std::move(v));
+	}
+
+	const rapidjson::Value& indJson = doc["indices"];
+	if (!indJson.IsArray() || indJson.Size() < 1)
+	{
+		MK_ASSERT(nullptr, "Mesh file has no indices.");
+	}
+
+	std::vector<UINT> indices;
+	indices.reserve(indJson.Size() * 3);
+	for (rapidjson::SizeType i = 0; i < indJson.Size(); i++)
+	{
+		const rapidjson::Value& ind = indJson[i];
+		if (!ind.IsArray() || ind.Size() != 3)
+		{
+			MK_ASSERT(nullptr, "Unknown index format.");
+		}
+
+		indices.emplace_back(ind[0].GetUint());
+		indices.emplace_back(ind[1].GetUint());
+		indices.emplace_back(ind[2].GetUint());
+	}
+
+	CreateVertexBuffer(vertices);
+	CreateIndexBuffer(indices);
+}
+
+void Mesh::LoadSkeletalMesh(const rapidjson::Document& doc)
+{
+	const rapidjson::Value& vertsJson = doc["vertices"];
+	if (!vertsJson.IsArray() || vertsJson.Size() < 1)
+	{
+		MK_ASSERT(nullptr, "Mesh file has no vertices.");
+	}
+
+	std::vector<SkinnedVertex> vertices;
+	vertices.reserve(vertsJson.Size());
+
+	for (rapidjson::SizeType i = 0; i < vertsJson.Size(); i++)
+	{
+		const rapidjson::Value& vert = vertsJson[i];
+		if (!vert.IsArray() || vert.Size() != 16)
+		{
+			MK_ASSERT(nullptr, "Unknown vertex format.");
+		}
+
+		SkinnedVertex v;
+
+		v.Position.x = vert[0].GetFloat();
+		v.Position.y = vert[1].GetFloat();
+		v.Position.z = vert[2].GetFloat();
+		v.Normal.x = vert[3].GetFloat();
+		v.Normal.y = vert[4].GetFloat();
+		v.Normal.z = vert[5].GetFloat();
 
 		v.Bone[0] = vert[6].GetUint();
 		v.Bone[1] = vert[7].GetUint();
 		v.Bone[2] = vert[8].GetUint();
 		v.Bone[3] = vert[9].GetUint();
-		
+
 		v.Weight.x = vert[10].GetFloat() / 255.0f;
 		v.Weight.y = vert[11].GetFloat() / 255.0f;
 		v.Weight.z = vert[12].GetFloat() / 255.0f;
@@ -101,14 +175,14 @@ void Mesh::Load(const std::wstring& path)
 		indices.emplace_back(ind[2].GetUint());
 	}
 
-	CreateVertexBuffer(vertices);
+	CreateSkinnedVertexBuffer(vertices);
 	CreateIndexBuffer(indices);
 }
 
-void Mesh::CreateVertexBuffer(const std::vector<Vertex>& vertices)
+void Mesh::CreateSkinnedVertexBuffer(const std::vector<SkinnedVertex>& vertices)
 {
 	m_VertexCount = static_cast<UINT>(vertices.size());
-	UINT bufferSize = m_VertexCount * sizeof(Vertex);
+	UINT bufferSize = m_VertexCount * sizeof(SkinnedVertex);
 	
 	ComPtr<ID3D12Resource> vertexUploadBuffer;
 	const CD3DX12_HEAP_PROPERTIES uploadBufferHeapProps(D3D12_HEAP_TYPE_UPLOAD);
@@ -140,6 +214,48 @@ void Mesh::CreateVertexBuffer(const std::vector<Vertex>& vertices)
 	CMD_LIST->CopyResource(m_VertexBuffer.Get(), vertexUploadBuffer.Get());
 	CMD_LIST->ResourceBarrier(1, &toDefaultBarrier);
 	
+	m_VertexBufferView.BufferLocation = m_VertexBuffer->GetGPUVirtualAddress();
+	m_VertexBufferView.SizeInBytes = bufferSize;
+	m_VertexBufferView.StrideInBytes = sizeof(SkinnedVertex);
+
+	RELEASE_UPLOAD_BUFFER(vertexUploadBuffer);
+}
+
+void Mesh::CreateVertexBuffer(const std::vector<Vertex>& vertices)
+{
+	m_VertexCount = static_cast<UINT>(vertices.size());
+	UINT bufferSize = m_VertexCount * sizeof(Vertex);
+
+	ComPtr<ID3D12Resource> vertexUploadBuffer;
+	const CD3DX12_HEAP_PROPERTIES uploadBufferHeapProps(D3D12_HEAP_TYPE_UPLOAD);
+	const CD3DX12_RESOURCE_DESC uploadbufferDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
+	DEVICE->CreateCommittedResource(
+		&uploadBufferHeapProps,
+		D3D12_HEAP_FLAG_NONE,
+		&uploadbufferDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&vertexUploadBuffer));
+
+	void* mappedData;
+	vertexUploadBuffer->Map(0, nullptr, &mappedData);
+	::memcpy(mappedData, vertices.data(), bufferSize);
+	vertexUploadBuffer->Unmap(0, nullptr);
+
+	const CD3DX12_HEAP_PROPERTIES defaultBufferHeapProps(D3D12_HEAP_TYPE_DEFAULT);
+	const CD3DX12_RESOURCE_DESC defaultbufferDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
+	DEVICE->CreateCommittedResource(
+		&defaultBufferHeapProps,
+		D3D12_HEAP_FLAG_NONE,
+		&defaultbufferDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&m_VertexBuffer));
+
+	const auto toDefaultBarrier = CD3DX12_RESOURCE_BARRIER::Transition(m_VertexBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
+	CMD_LIST->CopyResource(m_VertexBuffer.Get(), vertexUploadBuffer.Get());
+	CMD_LIST->ResourceBarrier(1, &toDefaultBarrier);
+
 	m_VertexBufferView.BufferLocation = m_VertexBuffer->GetGPUVirtualAddress();
 	m_VertexBufferView.SizeInBytes = bufferSize;
 	m_VertexBufferView.StrideInBytes = sizeof(Vertex);

@@ -64,14 +64,31 @@ void Scene::OnRender()
 
 	ID3D12DescriptorHeap* ppHeaps[] = { TEXHEAP->GetHeap().Get() };
 	CMD_LIST->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
-	auto group = m_Registry.group<MeshRendererComponent, AnimatorComponent>(entt::get<TransformComponent>);
-	for (auto entity : group)
 	{
-		auto [meshRenderer, transform] = group.get<MeshRendererComponent, TransformComponent>(entity);
-		auto& animator = group.get<AnimatorComponent>(entity);
-		animator.Bind();
-		transform.Bind();
-		meshRenderer.Bind();
+		CMD_LIST->SetPipelineState(ENGINE->GetSkinnedPSO().Get());
+		auto group = m_Registry.view<MeshRendererComponent, AnimatorComponent, TransformComponent>();
+		for (auto entity : group)
+		{
+			auto [meshRenderer, transform] = group.get<MeshRendererComponent, TransformComponent>(entity);
+			auto& animator = group.get<AnimatorComponent>(entity);
+			animator.Bind();
+			transform.Bind();
+			meshRenderer.Bind();
+		}
+	}
+
+	CMD_LIST->SetPipelineState(ENGINE->GetDefaultPSO().Get());
+	auto view = m_Registry.view<MeshRendererComponent, TransformComponent, TagComponent>();
+	for (auto entity : view)
+	{
+		auto& tag = view.get<TagComponent>(entity);
+
+		if (tag == L"box")
+		{
+			auto [mr, transform] = view.get<MeshRendererComponent, TransformComponent>(entity);
+			transform.Bind();
+			mr.Bind();
+		}
 	}
 }
 
@@ -89,13 +106,34 @@ void Scene::OnDestroy()
 void Scene::LoadAssets()
 {
 	m_MainCamera = CreateEntity(L"MainCamera");
-	m_MainCamera->AddComponent<CameraComponent>(Vector3(0.0f, 100.0f, -300.0f), Vector3::Backward);
+	m_MainCamera->AddComponent<CameraComponent>(Vector3(0.0f, 200.0f, -300.0f), Vector3::Backward);
 
-	auto box = CreateEntity(L"Box");
-	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
-	box->AddComponent<ScriptComponent>(new CharacterMovement(box, 45.0f));
-	auto& animComponent = box->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
-	animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Run.gpanim"));
+	{
+		auto knight = CreateEntity(L"knight");
+		knight->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
+		knight->AddComponent<ScriptComponent>(new CharacterMovement(knight, 30.0f));
+		auto& animComponent = knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
+		animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Run.gpanim"));
+	}
+
+	{
+		auto knight = CreateEntity(L"knight2");
+		knight->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
+		knight->AddComponent<ScriptComponent>(new CharacterMovement(knight, 0.0f));
+		auto& tr = knight->GetComponent<TransformComponent>();
+		tr.SetPosition(Vector3(-250.0f, 0.0f, 0.0f));
+		auto& animComponent = knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
+		animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/GetPain.gpanim"));
+	}
+
+	{
+		m_Box = CreateEntity(L"box");
+		m_Box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Crate.gpmesh"), ResourceManager::GetTexture(L"Assets/Crate.png"));
+		auto& tr = m_Box->GetComponent<TransformComponent>();
+		tr.SetScale(2.0f);
+		tr.SetRotation(Vector3(0.0f, -60.0f, 0.0f));
+		tr.SetPosition(Vector3(250.0f, 0.0f, 0.0f));
+	}
 }
 
 void Scene::OnKeyDown(UINT8 keycode)

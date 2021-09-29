@@ -14,12 +14,19 @@
 
 constexpr unsigned int MAX_SKELETON_BONES = 96;
 
-struct Vertex
+struct SkinnedVertex
 {
 	Vector3 Position;
 	Vector3 Normal;
 	UINT Bone[4];
 	Vector4 Weight;
+	Vector2 UV;
+};
+
+struct Vertex
+{
+	Vector3 Position;
+	Vector3 Normal;
 	Vector2 UV;
 };
 

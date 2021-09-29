@@ -3,6 +3,8 @@
 #include "Core.h"
 #include "Resource.h"
 
+#include <rapidjson/document.h>
+
 class Mesh : public IResource
 {
 public:
@@ -14,6 +16,10 @@ public:
 	virtual void Load(const std::wstring& path) override;
 
 private:
+	void LoadStaticMesh(const rapidjson::Document& doc);
+	void LoadSkeletalMesh(const rapidjson::Document& doc);
+
+	void CreateSkinnedVertexBuffer(const std::vector<SkinnedVertex>& vertices);
 	void CreateVertexBuffer(const std::vector<Vertex>& vertices);
 	void CreateIndexBuffer(const std::vector<UINT>& indices);
 
