@@ -83,7 +83,7 @@ void Scene::OnRender()
 	{
 		auto& tag = view.get<TagComponent>(entity);
 
-		if (tag == L"box")
+		if (tag == L"box" || tag == L"plane")
 		{
 			auto [mr, transform] = view.get<MeshRendererComponent, TransformComponent>(entity);
 			transform.Bind();
@@ -120,9 +120,13 @@ void Scene::LoadAssets()
 		m_Box = CreateEntity(L"box");
 		m_Box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Crate.gpmesh"), ResourceManager::GetTexture(L"Assets/Crate.png"));
 		auto& tr = m_Box->GetComponent<TransformComponent>();
-		tr.SetScale(2.0f);
-		tr.SetRotation(Vector3(0.0f, -60.0f, 0.0f));
-		tr.SetPosition(Vector3(250.0f, 0.0f, 0.0f));
+		tr.SetPosition(Vector3(250.0f, 50.0f, 0.0f));
+	}
+
+	{
+		auto plane = CreateEntity(L"plane");
+		plane->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Plane.gpmesh"), ResourceManager::GetTexture(L"Assets/Plane.png"));
+		auto& tr = plane->GetComponent<TransformComponent>();
 	}
 }
 

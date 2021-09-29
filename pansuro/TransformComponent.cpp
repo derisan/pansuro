@@ -6,13 +6,13 @@
 TransformComponent::TransformComponent()
 	: m_Position(Vector3::Zero)
 	, m_Rotation(Vector3::Zero)
-	, m_Scale(1.0f)
+	, m_Scale(Vector3::One)
 	, m_UploadBuffer(DEVICE.Get(), 1, true)
 {
 
 }
 
-TransformComponent::TransformComponent(const Vector3& position, const Vector3& rotation, float scale)
+TransformComponent::TransformComponent(const Vector3& position, const Vector3& rotation, const Vector3& scale)
 	: m_Position(position)
 	, m_Rotation(rotation)
 	, m_Scale(scale)

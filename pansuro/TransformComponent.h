@@ -6,7 +6,7 @@ class TransformComponent
 {
 public:
 	TransformComponent();
-	TransformComponent(const Vector3& position, const Vector3& rotation = Vector3::Zero, float scale = 1.0f);
+	TransformComponent(const Vector3& position, const Vector3& rotation = Vector3::Zero, const Vector3& scale = Vector3::One);
 	~TransformComponent();
 
 	void Bind();
@@ -17,8 +17,9 @@ public:
 	void SetRotation(const Vector3& rotation) { m_Rotation = rotation; }
 	const Vector3& GetRotation() const { return m_Rotation; }
 
-	void SetScale(float scale) { m_Scale = scale; }
-	float GetScale() const { return m_Scale; }
+	void SetScale(const Vector3& scale) { m_Scale = scale; }
+	void SetScale(float x = 1.0f, float y = 1.0f, float z = 1.0f) { m_Scale = Vector3(x, y, z); }
+	const Vector3& GetScale() const { return m_Scale; }
 
 	void RotateYaw(float yaw, bool bAccumulate = false);
 	void MoveForward(float speed);
@@ -28,7 +29,7 @@ public:
 private:
 	Vector3 m_Position;
 	Vector3 m_Rotation;
-	float m_Scale;
+	Vector3 m_Scale;
 
 	UploadBuffer<Matrix> m_UploadBuffer;
 };
