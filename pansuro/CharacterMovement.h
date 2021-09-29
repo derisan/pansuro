@@ -4,14 +4,20 @@
 #include "Script.h"
 
 #include "TransformComponent.h"
+#include "AnimatorComponent.h"
+#include "ResourceManager.h"
+
+#include "Input.h"
 
 class CharacterMovement : public Script
 {
 public:
-	CharacterMovement(Entity* owner, float speed)
+	CharacterMovement(Entity* owner, float speed = 50.0f)
 		: Script(owner)
 		, m_Speed(speed)
-		, transform(GetComponent<TransformComponent>()) {}
+		, transform(GetComponent<TransformComponent>())
+		, animator(GetComponent<AnimatorComponent>())
+	{}
 
 	virtual void OnCreate() override
 	{
@@ -20,10 +26,29 @@ public:
 
 	virtual void OnUpdate(float dt) override
 	{
-		auto rot = transform.GetRotation();
+		if (INPUT->IsButtonHold(KeyType::W))
+		{
+			transform.RotateYaw(0.0f);
+			transform.MoveForward(m_Speed * dt);
+		}
 
-		rot.y += m_Speed * dt;
-		transform.SetRotation(rot);
+		if (INPUT->IsButtonHold(KeyType::A))
+		{
+			transform.RotateYaw(-90.0f);
+			transform.MoveForward(m_Speed * dt);
+		}
+
+		if (INPUT->IsButtonHold(KeyType::S))
+		{
+			transform.RotateYaw(180.0f);
+			transform.MoveForward(m_Speed * dt);
+		}
+
+		if (INPUT->IsButtonHold(KeyType::D))
+		{
+			transform.RotateYaw(90.0f);
+			transform.MoveForward(m_Speed * dt);
+		}
 	}
 
 	virtual void OnDestroy() override
@@ -35,4 +60,5 @@ private:
 	float m_Speed;
 
 	TransformComponent& transform;
+	AnimatorComponent& animator;
 };

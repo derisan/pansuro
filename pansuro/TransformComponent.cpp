@@ -36,3 +36,28 @@ void TransformComponent::Bind()
 
 	CMD_LIST->SetGraphicsRootConstantBufferView(RP_World, m_UploadBuffer.GetVirtualAddress());
 }
+
+void TransformComponent::RotateYaw(float yaw, bool bAccumulate /*= false*/)
+{
+	if (bAccumulate)
+	{
+		m_Rotation.y += yaw;
+	}
+
+	else
+	{
+		m_Rotation.y = yaw;
+	}
+}
+
+void TransformComponent::MoveForward(float speed)
+{
+	Vector3 forward = XMVector3Rotate(Vector3::Backward, Quaternion::CreateFromAxisAngle(Vector3::UnitY, XMConvertToRadians(m_Rotation.y)));
+	m_Position += forward * speed;
+}
+
+Vector3 TransformComponent::GetForward() const
+{
+	Vector3 forward = XMVector3Rotate(Vector3::Backward, Quaternion::CreateFromAxisAngle(Vector3::UnitY, XMConvertToRadians(m_Rotation.y)));
+	return forward;
+}

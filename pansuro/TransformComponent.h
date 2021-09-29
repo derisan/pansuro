@@ -20,6 +20,11 @@ public:
 	void SetScale(float scale) { m_Scale = scale; }
 	float GetScale() const { return m_Scale; }
 
+	void RotateYaw(float yaw, bool bAccumulate = false);
+	void MoveForward(float speed);
+
+	Vector3 GetForward() const;
+
 private:
 	Vector3 m_Position;
 	Vector3 m_Rotation;

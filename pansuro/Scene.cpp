@@ -111,19 +111,9 @@ void Scene::LoadAssets()
 	{
 		auto knight = CreateEntity(L"knight");
 		knight->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
-		knight->AddComponent<ScriptComponent>(new CharacterMovement(knight, 30.0f));
 		auto& animComponent = knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
-		animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Run.gpanim"));
-	}
-
-	{
-		auto knight = CreateEntity(L"knight2");
-		knight->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
-		knight->AddComponent<ScriptComponent>(new CharacterMovement(knight, 0.0f));
-		auto& tr = knight->GetComponent<TransformComponent>();
-		tr.SetPosition(Vector3(-250.0f, 0.0f, 0.0f));
-		auto& animComponent = knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
-		animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/GetPain.gpanim"));
+		animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Idle.gpanim"));
+		knight->AddComponent<ScriptComponent>(new CharacterMovement(knight));
 	}
 
 	{
