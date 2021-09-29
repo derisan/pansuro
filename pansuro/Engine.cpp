@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "TextureDescriptorHeap.h"
 #include "Timer.h"
+#include "Input.h"
 
 Engine* Engine::s_Instance = nullptr;
 TextureDescriptorHeap* Engine::s_TextureDescriptorHeap = nullptr;
@@ -41,6 +42,7 @@ void Engine::OnInit()
 {
 	Log::Init();
 	TIMER->OnInit();
+	INPUT->Init();
 
 	MK_INFO("Engine Initializing...");
 
@@ -66,6 +68,7 @@ void Engine::OnDestroy()
 void Engine::OnUpdate()
 {
 	TIMER->OnUpdate();
+	INPUT->Update();
 
 	float dt = TIMER->GetDeltaTime();
 
