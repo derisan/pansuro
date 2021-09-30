@@ -76,9 +76,9 @@ public:
 		}
 	}
 
-	static Mesh* GetDebugMesh(const std::wstring& path)
+	static Mesh* GetDebugMesh(const std::wstring& path, bool isSkeletal = false)
 	{
-		std::wstring key = path + L"_d";
+		std::wstring key = L"Assets/" + fs::path(path).stem().wstring() + L"_d.gpmesh";
 
 		auto iter = m_Resources.find(key);
 
@@ -87,11 +87,22 @@ public:
 			return (Mesh*)m_Resources[key];
 		}
 
-		else
+		if (isSkeletal == false)
 		{
 			Mesh* mesh = (Mesh*)GetResource<Mesh>(path);
 			const auto& aabb = mesh->GetAABB();
 
+			Mesh* debugMesh = new Mesh();
+			debugMesh->CreateDebugMesh(aabb.Min, aabb.Max);
+			m_Resources[key] = debugMesh;
+			return debugMesh;
+		}
+		else
+		{
+			Mesh* mesh = (Mesh*)GetResource<Mesh>(path);
+			mesh->LoadDebugMesh(key);
+
+			const auto& aabb = mesh->GetAABB();
 			Mesh* debugMesh = new Mesh();
 			debugMesh->CreateDebugMesh(aabb.Min, aabb.Max);
 			m_Resources[key] = debugMesh;

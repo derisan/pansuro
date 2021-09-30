@@ -16,8 +16,10 @@ public:
 	virtual void Load(const std::wstring& path) override;
 
 	const AABB& GetAABB() const { return m_AABB; }
+	void SetAABB(const AABB& aabb) { m_AABB = aabb; }
 
 	void CreateDebugMesh(const Vector3& minPoint, const Vector3& maxPoint);
+	void LoadDebugMesh(const std::wstring& path);
 
 private:
 	void LoadStaticMesh(const rapidjson::Document& doc);

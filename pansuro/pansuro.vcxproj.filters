@@ -153,9 +153,6 @@
     <ClInclude Include="Texture.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="TextureDescriptorHeap.h">
-      <Filter>Source Files\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="CameraComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
@@ -203,6 +200,9 @@
     </ClInclude>
     <ClInclude Include="DebugDrawComponent.h">
       <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureDescriptorHeap.h">
+      <Filter>Source Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

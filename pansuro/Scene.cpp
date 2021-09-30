@@ -123,7 +123,7 @@ void Scene::LoadAssets()
 		auto& animComponent = knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
 		animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Idle.gpanim"));
 		knight->AddComponent<ScriptComponent>(new CharacterMovement(knight, 150.0f));
-		knight->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Knight.gpmesh"));
+		knight->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Knight.gpmesh", true));
 	}
 
 	{

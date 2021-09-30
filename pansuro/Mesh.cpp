@@ -112,6 +112,54 @@ void Mesh::CreateDebugMesh(const Vector3& minPoint, const Vector3& maxPoint)
 	CreateIndexBuffer(indices);
 }
 
+void Mesh::LoadDebugMesh(const std::wstring& path)
+{
+	std::ifstream file(path);
+	if (!file.is_open())
+	{
+		MK_ASSERT(nullptr, "Mesh file not found.");
+	}
+
+	std::stringstream fileStream;
+	fileStream << file.rdbuf();
+	std::string contents = fileStream.str();
+	rapidjson::StringStream jsonStr(contents.c_str());
+	rapidjson::Document doc;
+	doc.ParseStream(jsonStr);
+
+	m_AABB = {};
+
+	if (!doc.IsObject())
+	{
+		MK_ASSERT(nullptr, "It's not valid json file.");
+	}
+
+	const rapidjson::Value& vertsJson = doc["vertices"];
+	if (!vertsJson.IsArray() || vertsJson.Size() < 1)
+	{
+		MK_ASSERT(nullptr, "Mesh file has no vertices.");
+	}
+
+	for (rapidjson::SizeType i = 0; i < vertsJson.Size(); i++)
+	{
+		const rapidjson::Value& vert = vertsJson[i];
+		if (!vert.IsArray() || vert.Size() != 16)
+		{
+			MK_ASSERT(nullptr, "Unknown vertex format.");
+		}
+
+		Vector3 pos;
+
+		pos.x = vert[0].GetFloat();
+		pos.y = vert[1].GetFloat();
+		pos.z = vert[2].GetFloat();
+
+		m_AABB.UpdateMinMax(pos);
+	}
+
+	m_AABB.GenerateBox();
+}
+
 void Mesh::LoadStaticMesh(const rapidjson::Document& doc)
 {
 	const rapidjson::Value& vertsJson = doc["vertices"];

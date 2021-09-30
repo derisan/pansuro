@@ -34,7 +34,7 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace DirectX::PackedVector;
 using namespace DirectX::SimpleMath;
-
+namespace fs = std::filesystem;
 
 #pragma comment(lib, "d3d12")
 #pragma comment(lib, "dxgi")
