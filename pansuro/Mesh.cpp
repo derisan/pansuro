@@ -54,42 +54,38 @@ void Mesh::Load(const std::wstring& path)
 
 void Mesh::CreateDebugMesh(const Vector3& minPoint, const Vector3& maxPoint)
 {
-	float w2 = (maxPoint.x - minPoint.x) / 2.0f;
-	float h2 = (maxPoint.y - minPoint.y) / 2.0f;
-	float d2 = (maxPoint.z - minPoint.z) / 2.0f;
-
 	std::vector<Vertex> vertices(24);
 
 	// ¾Õ¸é
-	vertices[0] = Vertex{ Vector3(-w2, -h2, -d2), Vector3(0.0f, 0.0f, -1.0f), Vector2(0.0f, 1.0f) };
-	vertices[1] = Vertex{ Vector3(-w2, +h2, -d2), Vector3(0.0f, 0.0f, -1.0f), Vector2(0.0f, 0.0f) };
-	vertices[2] = Vertex{ Vector3(+w2, +h2, -d2), Vector3(0.0f, 0.0f, -1.0f), Vector2(1.0f, 0.0f) };
-	vertices[3] = Vertex{ Vector3(+w2, -h2, -d2), Vector3(0.0f, 0.0f, -1.0f), Vector2(1.0f, 1.0f) };
+	vertices[0] = Vertex{ Vector3(minPoint.x, minPoint.y, minPoint.z), Vector3(0.0f, 0.0f, -1.0f), Vector2(0.0f, 1.0f) };
+	vertices[1] = Vertex{ Vector3(minPoint.x, maxPoint.y, minPoint.z), Vector3(0.0f, 0.0f, -1.0f), Vector2(0.0f, 0.0f) };
+	vertices[2] = Vertex{ Vector3(maxPoint.x, maxPoint.y, minPoint.z), Vector3(0.0f, 0.0f, -1.0f), Vector2(1.0f, 0.0f) };
+	vertices[3] = Vertex{ Vector3(maxPoint.x, minPoint.y, minPoint.z), Vector3(0.0f, 0.0f, -1.0f), Vector2(1.0f, 1.0f) };
 	// µÞ¸é
-	vertices[4] = Vertex{ Vector3(-w2, -h2, +d2), Vector3(0.0f, 0.0f, 1.0f), Vector2(1.0f, 1.0f) };
-	vertices[5] = Vertex{ Vector3(+w2, -h2, +d2), Vector3(0.0f, 0.0f, 1.0f), Vector2(0.0f, 1.0f) };
-	vertices[6] = Vertex{ Vector3(+w2, +h2, +d2), Vector3(0.0f, 0.0f, 1.0f), Vector2(0.0f, 0.0f) };
-	vertices[7] = Vertex{ Vector3(-w2, +h2, +d2), Vector3(0.0f, 0.0f, 1.0f), Vector2(1.0f, 0.0f) };
+	vertices[4] = Vertex{ Vector3(minPoint.x, minPoint.y, maxPoint.z), Vector3(0.0f, 0.0f, 1.0f), Vector2(1.0f, 1.0f) };
+	vertices[5] = Vertex{ Vector3(maxPoint.x, minPoint.y, maxPoint.z), Vector3(0.0f, 0.0f, 1.0f), Vector2(0.0f, 1.0f) };
+	vertices[6] = Vertex{ Vector3(maxPoint.x, maxPoint.y, maxPoint.z), Vector3(0.0f, 0.0f, 1.0f), Vector2(0.0f, 0.0f) };
+	vertices[7] = Vertex{ Vector3(minPoint.x, maxPoint.y, maxPoint.z), Vector3(0.0f, 0.0f, 1.0f), Vector2(1.0f, 0.0f) };
 	// À­¸é
-	vertices[8] = Vertex{ Vector3(-w2, +h2, -d2),   Vector3(0.0f, 1.0f, 0.0f), Vector2(0.0f, 1.0f) };
-	vertices[9] = Vertex{ Vector3(-w2, +h2, +d2),   Vector3(0.0f, 1.0f, 0.0f), Vector2(0.0f, 0.0f) };
-	vertices[10] = Vertex{ Vector3(+w2, +h2, +d2), Vector3(0.0f, 1.0f, 0.0f) , Vector2(1.0f, 0.0f) };
-	vertices[11] = Vertex{ Vector3(+w2, +h2, -d2), Vector3(0.0f, 1.0f, 0.0f) , Vector2(1.0f, 1.0f) };
+	vertices[8] = Vertex{ Vector3(minPoint.x, maxPoint.y, minPoint.z),   Vector3(0.0f, 1.0f, 0.0f), Vector2(0.0f, 1.0f) };
+	vertices[9] = Vertex{ Vector3(minPoint.x, maxPoint.y, maxPoint.z),   Vector3(0.0f, 1.0f, 0.0f), Vector2(0.0f, 0.0f) };
+	vertices[10] = Vertex{ Vector3(maxPoint.x, maxPoint.y, maxPoint.z), Vector3(0.0f, 1.0f, 0.0f) , Vector2(1.0f, 0.0f) };
+	vertices[11] = Vertex{ Vector3(maxPoint.x, maxPoint.y, minPoint.z), Vector3(0.0f, 1.0f, 0.0f) , Vector2(1.0f, 1.0f) };
 	// ¾Æ·§¸é																				 
-	vertices[12] = Vertex{ Vector3(-w2, -h2, -d2), Vector3(0.0f, -1.0f, 0.0f), Vector2(1.0f, 1.0f) };
-	vertices[13] = Vertex{ Vector3(+w2, -h2, -d2), Vector3(0.0f, -1.0f, 0.0f), Vector2(0.0f, 1.0f) };
-	vertices[14] = Vertex{ Vector3(+w2, -h2, +d2), Vector3(0.0f, -1.0f, 0.0f), Vector2(0.0f, 0.0f) };
-	vertices[15] = Vertex{ Vector3(-w2, -h2, +d2), Vector3(0.0f, -1.0f, 0.0f), Vector2(1.0f, 0.0f) };
+	vertices[12] = Vertex{ Vector3(minPoint.x, minPoint.y, minPoint.z), Vector3(0.0f, -1.0f, 0.0f), Vector2(1.0f, 1.0f) };
+	vertices[13] = Vertex{ Vector3(maxPoint.x, minPoint.y, minPoint.z), Vector3(0.0f, -1.0f, 0.0f), Vector2(0.0f, 1.0f) };
+	vertices[14] = Vertex{ Vector3(maxPoint.x, minPoint.y, maxPoint.z), Vector3(0.0f, -1.0f, 0.0f), Vector2(0.0f, 0.0f) };
+	vertices[15] = Vertex{ Vector3(minPoint.x, minPoint.y, maxPoint.z), Vector3(0.0f, -1.0f, 0.0f), Vector2(1.0f, 0.0f) };
 	// ¿ÞÂÊ¸é																				 
-	vertices[16] = Vertex{ Vector3(-w2, -h2, +d2), Vector3(-1.0f, 0.0f, 0.0f), Vector2(0.0f, 1.0f) };
-	vertices[17] = Vertex{ Vector3(-w2, +h2, +d2), Vector3(-1.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f) };
-	vertices[18] = Vertex{ Vector3(-w2, +h2, -d2), Vector3(-1.0f, 0.0f, 0.0f), Vector2(1.0f, 0.0f) };
-	vertices[19] = Vertex{ Vector3(-w2, -h2, -d2), Vector3(-1.0f, 0.0f, 0.0f), Vector2(1.0f, 1.0f) };
+	vertices[16] = Vertex{ Vector3(minPoint.x, minPoint.y, maxPoint.z), Vector3(-1.0f, 0.0f, 0.0f), Vector2(0.0f, 1.0f) };
+	vertices[17] = Vertex{ Vector3(minPoint.x, maxPoint.y, maxPoint.z), Vector3(-1.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f) };
+	vertices[18] = Vertex{ Vector3(minPoint.x, maxPoint.y, minPoint.z), Vector3(-1.0f, 0.0f, 0.0f), Vector2(1.0f, 0.0f) };
+	vertices[19] = Vertex{ Vector3(minPoint.x, minPoint.y, minPoint.z), Vector3(-1.0f, 0.0f, 0.0f), Vector2(1.0f, 1.0f) };
 	// ¿À¸¥ÂÊ¸é																				 
-	vertices[20] = Vertex{ Vector3(+w2, -h2, -d2), Vector3(1.0f, 0.0f, 0.0f), Vector2(0.0f, 1.0f) };
-	vertices[21] = Vertex{ Vector3(+w2, +h2, -d2), Vector3(1.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f) };
-	vertices[22] = Vertex{ Vector3(+w2, +h2, +d2), Vector3(1.0f, 0.0f, 0.0f), Vector2(1.0f, 0.0f) };
-	vertices[23] = Vertex{ Vector3(+w2, -h2, +d2), Vector3(1.0f, 0.0f, 0.0f), Vector2(1.0f, 1.0f) };
+	vertices[20] = Vertex{ Vector3(maxPoint.x, minPoint.y, minPoint.z), Vector3(1.0f, 0.0f, 0.0f), Vector2(0.0f, 1.0f) };
+	vertices[21] = Vertex{ Vector3(maxPoint.x, maxPoint.y, minPoint.z), Vector3(1.0f, 0.0f, 0.0f), Vector2(0.0f, 0.0f) };
+	vertices[22] = Vertex{ Vector3(maxPoint.x, maxPoint.y, maxPoint.z), Vector3(1.0f, 0.0f, 0.0f), Vector2(1.0f, 0.0f) };
+	vertices[23] = Vertex{ Vector3(maxPoint.x, minPoint.y, maxPoint.z), Vector3(1.0f, 0.0f, 0.0f), Vector2(1.0f, 1.0f) };
 
 	std::vector<UINT> indices(36);
 

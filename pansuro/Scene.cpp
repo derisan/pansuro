@@ -131,6 +131,7 @@ void Scene::LoadAssets()
 		m_Box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Crate.gpmesh"), ResourceManager::GetTexture(L"Assets/Crate.png"));
 		auto& tr = m_Box->GetComponent<TransformComponent>();
 		tr.SetPosition(Vector3(250.0f, 50.0f, 0.0f));
+		m_Box->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Crate.gpmesh"));
 	}
 
 	//{
