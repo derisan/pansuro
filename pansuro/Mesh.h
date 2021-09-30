@@ -15,6 +15,8 @@ public:
 
 	virtual void Load(const std::wstring& path) override;
 
+	const AABB& GetAABB() const { return m_AABB; }
+
 private:
 	void LoadStaticMesh(const rapidjson::Document& doc);
 	void LoadSkeletalMesh(const rapidjson::Document& doc);
@@ -31,4 +33,6 @@ private:
 	ComPtr<ID3D12Resource> m_IndexBuffer;
 	D3D12_INDEX_BUFFER_VIEW m_IndexBufferView;
 	UINT m_IndexCount;
+
+	AABB m_AABB = {};
 };

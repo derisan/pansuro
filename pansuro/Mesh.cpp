@@ -63,6 +63,7 @@ void Mesh::LoadStaticMesh(const rapidjson::Document& doc)
 	std::vector<Vertex> vertices;
 	vertices.reserve(vertsJson.Size());
 
+
 	for (rapidjson::SizeType i = 0; i < vertsJson.Size(); i++)
 	{
 		const rapidjson::Value& vert = vertsJson[i];
@@ -82,8 +83,12 @@ void Mesh::LoadStaticMesh(const rapidjson::Document& doc)
 		v.UV.x = vert[6].GetFloat();
 		v.UV.y = vert[7].GetFloat();
 
+		m_AABB.UpdateMinMax(v.Position);
+
 		vertices.push_back(std::move(v));
 	}
+
+	m_AABB.GenerateBox();
 
 	const rapidjson::Value& indJson = doc["indices"];
 	if (!indJson.IsArray() || indJson.Size() < 1)
@@ -151,8 +156,12 @@ void Mesh::LoadSkeletalMesh(const rapidjson::Document& doc)
 		v.UV.x = vert[14].GetFloat();
 		v.UV.y = vert[15].GetFloat();
 
+		m_AABB.UpdateMinMax(v.Position);
+
 		vertices.push_back(std::move(v));
 	}
+
+	m_AABB.GenerateBox();
 
 	const rapidjson::Value& indJson = doc["indices"];
 	if (!indJson.IsArray() || indJson.Size() < 1)

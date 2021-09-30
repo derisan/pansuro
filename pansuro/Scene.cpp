@@ -78,17 +78,12 @@ void Scene::OnRender()
 	}
 
 	CMD_LIST->SetPipelineState(ENGINE->GetDefaultPSO().Get());
-	auto view = m_Registry.view<MeshRendererComponent, TransformComponent, TagComponent>();
+	auto view = m_Registry.view<MeshRendererComponent, TransformComponent>(entt::exclude<AnimatorComponent>);
 	for (auto entity : view)
 	{
-		auto& tag = view.get<TagComponent>(entity);
-
-		if (tag == L"box" || tag == L"plane")
-		{
-			auto [mr, transform] = view.get<MeshRendererComponent, TransformComponent>(entity);
-			transform.Bind();
-			mr.Bind();
-		}
+		auto [mr, transform] = view.get<MeshRendererComponent, TransformComponent>(entity);
+		transform.Bind();
+		mr.Bind();
 	}
 }
 
@@ -113,7 +108,7 @@ void Scene::LoadAssets()
 		knight->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
 		auto& animComponent = knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
 		animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Idle.gpanim"));
-		knight->AddComponent<ScriptComponent>(new CharacterMovement(knight));
+		knight->AddComponent<ScriptComponent>(new CharacterMovement(knight, 150.0f));
 	}
 
 	{

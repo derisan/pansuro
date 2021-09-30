@@ -65,6 +65,31 @@ struct MatrixPalette
 	Matrix Entry[MAX_SKELETON_BONES];
 };
 
+struct AABB
+{
+	AABB() = default;
+
+	void UpdateMinMax(const Vector3& point)
+	{
+		Min.x = min(Min.x, point.x);
+		Min.y = min(Min.y, point.y);
+		Min.z = min(Min.z, point.z);
+
+		Max.x = max(Max.x, point.x);
+		Max.y = max(Max.y, point.y);
+		Max.z = max(Max.z, point.z);
+	}
+
+	void GenerateBox()
+	{
+		BoundingBox::CreateFromPoints(Box, Min, Max);
+	}
+
+	Vector3 Min = { FLT_MAX, FLT_MAX, FLT_MAX };
+	Vector3 Max = { FLT_MIN, FLT_MIN, FLT_MIN };
+	BoundingBox Box = {};
+};
+
 inline std::wstring s2ws(const std::string& s)
 {
 	UINT len;
