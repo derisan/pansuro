@@ -269,6 +269,9 @@ void Engine::CreateRootSignature()
 	inputDesc.push_back({ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 });
 	inputDesc.push_back({ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 });
 	m_DefaultPSO = std::make_unique<PipelineState>(L"Assets/Shaders/default.hlsli", inputDesc, m_RootSignature);
+
+	m_DebugPSO = std::make_unique<PipelineState>(L"Assets/Shaders/wireframe.hlsli", inputDesc, m_RootSignature, 
+		D3D12_FILL_MODE_WIREFRAME, D3D12_CULL_MODE_NONE);
 }
 
 void Engine::WaitForPreviousFrame()

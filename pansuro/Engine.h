@@ -45,6 +45,7 @@ public:
 
 	ComPtr<ID3D12PipelineState> GetSkinnedPSO() { return m_SkinnedPSO->GetPSO(); }
 	ComPtr<ID3D12PipelineState> GetDefaultPSO() { return m_DefaultPSO->GetPSO(); }
+	ComPtr<ID3D12PipelineState> GetDebugPSO() { return m_DebugPSO->GetPSO(); }
 
 private:
 	Engine(UINT width, UINT height, std::wstring title);
@@ -88,6 +89,8 @@ private:
 
 	std::unique_ptr<PipelineState> m_SkinnedPSO;
 	std::unique_ptr<PipelineState> m_DefaultPSO;
+	std::unique_ptr<PipelineState> m_DebugPSO;
+
 
 	UINT m_RtvDescriptorSize;
 	UINT m_FrameIndex;

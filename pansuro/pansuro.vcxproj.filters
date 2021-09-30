@@ -109,6 +109,9 @@
     <ClCompile Include="Input.cpp">
       <Filter>Source Files\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="DebugDrawComponent.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -198,12 +201,18 @@
     <ClInclude Include="Input.h">
       <Filter>Source Files\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="DebugDrawComponent.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\skinned.hlsli">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\default.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\wireframe.hlsli">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

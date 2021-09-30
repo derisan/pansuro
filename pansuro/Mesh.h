@@ -17,6 +17,8 @@ public:
 
 	const AABB& GetAABB() const { return m_AABB; }
 
+	void CreateDebugMesh(const Vector3& minPoint, const Vector3& maxPoint);
+
 private:
 	void LoadStaticMesh(const rapidjson::Document& doc);
 	void LoadSkeletalMesh(const rapidjson::Document& doc);

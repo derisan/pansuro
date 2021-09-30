@@ -6,6 +6,8 @@
 PipelineState::PipelineState(const std::wstring& shaderFilename, 
 	const std::vector<D3D12_INPUT_ELEMENT_DESC>& inputElementDescs, 
 	ComPtr<ID3D12RootSignature> rootSignature, 
+	D3D12_FILL_MODE fillMode,
+	D3D12_CULL_MODE cullMode,
 	CD3DX12_RASTERIZER_DESC rasterizerState, 
 	CD3DX12_BLEND_DESC blendState,
 	CD3DX12_DEPTH_STENCIL_DESC depthStencilState)
@@ -29,6 +31,8 @@ PipelineState::PipelineState(const std::wstring& shaderFilename,
 	psoDesc.PS = CD3DX12_SHADER_BYTECODE(pixelShader.Get());
 	psoDesc.RasterizerState = rasterizerState;
 	psoDesc.RasterizerState.FrontCounterClockwise = TRUE;
+	psoDesc.RasterizerState.FillMode = fillMode;
+	psoDesc.RasterizerState.CullMode = cullMode;
 	psoDesc.BlendState = blendState;
 	psoDesc.DepthStencilState = depthStencilState;
 	psoDesc.SampleMask = UINT_MAX;

@@ -76,6 +76,29 @@ public:
 		}
 	}
 
+	static Mesh* GetDebugMesh(const std::wstring& path)
+	{
+		std::wstring key = path + L"_d";
+
+		auto iter = m_Resources.find(key);
+
+		if (iter != m_Resources.end())
+		{
+			return (Mesh*)m_Resources[key];
+		}
+
+		else
+		{
+			Mesh* mesh = (Mesh*)GetResource<Mesh>(path);
+			const auto& aabb = mesh->GetAABB();
+
+			Mesh* debugMesh = new Mesh();
+			debugMesh->CreateDebugMesh(aabb.Min, aabb.Max);
+			m_Resources[key] = debugMesh;
+			return debugMesh;
+		}
+	}
+
 private:
 	template<typename T>
 	static IResource* GetResource(const std::wstring& path)
@@ -86,11 +109,12 @@ private:
 		{
 			return iter->second;
 		}
-		
+
 		else
 		{
 			IResource* res = new T();
 			res->Load(path);
+			m_Resources[path] = res;
 			return res;
 		}
 	}

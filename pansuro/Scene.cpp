@@ -13,6 +13,7 @@
 #include "AnimatorComponent.h"
 #include "CharacterMovement.h"
 #include "ScriptComponent.h"
+#include "DebugDrawComponent.h"
 
 Scene::Scene()
 	: m_MainCamera(nullptr)
@@ -77,13 +78,26 @@ void Scene::OnRender()
 		}
 	}
 
-	CMD_LIST->SetPipelineState(ENGINE->GetDefaultPSO().Get());
-	auto view = m_Registry.view<MeshRendererComponent, TransformComponent>(entt::exclude<AnimatorComponent>);
-	for (auto entity : view)
 	{
-		auto [mr, transform] = view.get<MeshRendererComponent, TransformComponent>(entity);
-		transform.Bind();
-		mr.Bind();
+		CMD_LIST->SetPipelineState(ENGINE->GetDefaultPSO().Get());
+		auto view = m_Registry.view<MeshRendererComponent, TransformComponent>(entt::exclude<AnimatorComponent>);
+		for (auto entity : view)
+		{
+			auto [mr, transform] = view.get<MeshRendererComponent, TransformComponent>(entity);
+			transform.Bind();
+			mr.Bind();
+		}
+	}
+
+	{
+		CMD_LIST->SetPipelineState(ENGINE->GetDebugPSO().Get());
+		auto view = m_Registry.view<DebugDrawComponent, TransformComponent>();
+		for (auto entity : view)
+		{
+			auto [dd, tr] = view.get<DebugDrawComponent, TransformComponent>(entity);
+			tr.Bind();
+			dd.Bind();
+		}
 	}
 }
 
@@ -109,6 +123,7 @@ void Scene::LoadAssets()
 		auto& animComponent = knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
 		animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Idle.gpanim"));
 		knight->AddComponent<ScriptComponent>(new CharacterMovement(knight, 150.0f));
+		knight->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Knight.gpmesh"));
 	}
 
 	{
@@ -118,11 +133,11 @@ void Scene::LoadAssets()
 		tr.SetPosition(Vector3(250.0f, 50.0f, 0.0f));
 	}
 
-	{
-		auto plane = CreateEntity(L"plane");
-		plane->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Plane.gpmesh"), ResourceManager::GetTexture(L"Assets/Plane.png"));
-		auto& tr = plane->GetComponent<TransformComponent>();
-	}
+	//{
+	//	auto plane = CreateEntity(L"plane");
+	//	plane->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Plane.gpmesh"), ResourceManager::GetTexture(L"Assets/Plane.png"));
+	//	auto& tr = plane->GetComponent<TransformComponent>();
+	//}
 }
 
 void Scene::OnKeyDown(UINT8 keycode)
