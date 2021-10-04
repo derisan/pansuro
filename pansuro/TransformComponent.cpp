@@ -56,6 +56,11 @@ void TransformComponent::MoveForward(float speed)
 	m_Position += forward * speed;
 }
 
+void TransformComponent::Move(const Vector3& velocity)
+{
+	m_Position += velocity;
+}
+
 Vector3 TransformComponent::GetForward() const
 {
 	Vector3 forward = XMVector3Rotate(Vector3::Backward, Quaternion::CreateFromAxisAngle(Vector3::UnitY, XMConvertToRadians(m_Rotation.y)));

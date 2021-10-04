@@ -98,7 +98,7 @@ struct AABB
 		points[6] = Vector3(Max.x, Max.y, Min.z);
 		points[7] = Vector3(Max);
 
-		Quaternion q = Quaternion::CreateFromYawPitchRoll(rotation.x, rotation.y, rotation.z);
+		Quaternion q = Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(rotation.y), XMConvertToRadians(rotation.x), XMConvertToRadians(rotation.z));
 		Vector3 p = Vector3::Transform(points[0], q);
 		Min = p;
 		Max = p;

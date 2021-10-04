@@ -70,12 +70,43 @@ void Scene::OnUpdate(float dt)
 	}
 
 	{
+		auto& boxBox1 = m_Box->GetComponent<BoxComponent>();
 		auto& knightBox = m_Knight->GetComponent<BoxComponent>();
-		auto& boxBox = m_Box->GetComponent<BoxComponent>();
 
-		if(Intersect(knightBox, boxBox))
+		if(Intersect(boxBox1, knightBox))
 		{
-			MK_INFO("Collision!");
+			float dx1 = boxBox1.GetWorldAABB().Max.x - knightBox.GetWorldAABB().Min.x;
+			float dx2 = boxBox1.GetWorldAABB().Min.x - knightBox.GetWorldAABB().Max.x;
+			float dy1 = boxBox1.GetWorldAABB().Max.y - knightBox.GetWorldAABB().Min.y;
+			float dy2 = boxBox1.GetWorldAABB().Min.y - knightBox.GetWorldAABB().Max.y;
+			float dz1 = boxBox1.GetWorldAABB().Max.z - knightBox.GetWorldAABB().Min.z;
+			float dz2 = boxBox1.GetWorldAABB().Min.z - knightBox.GetWorldAABB().Max.z;
+
+			float dx = abs(dx1) < abs(dx2) ?
+				dx1 : dx2;
+			float dy = abs(dy1) < abs(dy2) ?
+				dy1 : dy2;
+			float dz = abs(dz1) < abs(dz2) ?
+				dz1 : dz2;
+
+			TransformComponent& transform = m_Knight->GetComponent<TransformComponent>();
+			Vector3 pos = transform.GetPosition();
+
+			if (abs(dx) <= abs(dy) && abs(dx) <= abs(dz))
+			{
+				pos.x += dx;
+			}
+			else if (abs(dy) <= abs(dx) && abs(dy) <= abs(dz))
+			{
+				pos.y += dy;
+			}
+			else
+			{
+				pos.z += dz;
+			}
+
+			transform.SetPosition(pos);
+			knightBox.Update(transform);
 		}
 	}
 }
@@ -157,6 +188,16 @@ void Scene::LoadAssets()
 		m_Box->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Crate.gpmesh"));
 		m_Box->AddComponent<BoxComponent>(ResourceManager::GetMesh(L"Assets/Crate.gpmesh")->GetAABB());
 	}
+
+	//{
+	//	m_Box2 = CreateEntity(L"box");
+	//	m_Box2->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Crate.gpmesh"), ResourceManager::GetTexture(L"Assets/Crate.png"));
+	//	auto& tr = m_Box2->GetComponent<TransformComponent>();
+	//	tr.SetPosition(Vector3(0.0f, 50.0f, 0.0f));
+	//	m_Box2->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Crate.gpmesh"));
+	//	m_Box2->AddComponent<BoxComponent>(ResourceManager::GetMesh(L"Assets/Crate.gpmesh")->GetAABB());
+	//	m_Box2->AddComponent<ScriptComponent>(new CharacterMovement(m_Box2, 150.0f));
+	//}
 
 	//{
 	//	auto plane = CreateEntity(L"plane");

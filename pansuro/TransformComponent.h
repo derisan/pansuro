@@ -23,6 +23,7 @@ public:
 
 	void RotateYaw(float yaw, bool bAccumulate = false);
 	void MoveForward(float speed);
+	void Move(const Vector3& velocity);
 
 	Vector3 GetForward() const;
 

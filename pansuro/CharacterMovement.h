@@ -16,7 +16,6 @@ public:
 		: Script(owner)
 		, m_Speed(speed)
 		, transform(GetComponent<TransformComponent>())
-		, animator(GetComponent<AnimatorComponent>())
 	{}
 
 	virtual void OnCreate() override
@@ -30,6 +29,7 @@ public:
 		{
 			transform.RotateYaw(0.0f);
 			transform.MoveForward(m_Speed * dt);
+			
 		}
 
 		if (INPUT->IsButtonHold(KeyType::A))
@@ -60,5 +60,4 @@ private:
 	float m_Speed;
 
 	TransformComponent& transform;
-	AnimatorComponent& animator;
 };
