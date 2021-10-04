@@ -85,6 +85,31 @@ struct AABB
 		BoundingBox::CreateFromPoints(Box, Min, Max);
 	}
 
+	void Rotate(const Vector3& rotation)
+	{
+		std::array<Vector3, 8> points;
+
+		points[0] = Min;
+		points[1] = Vector3(Max.x, Min.y, Min.z);
+		points[2] = Vector3(Min.x, Max.y, Min.z);
+		points[3] = Vector3(Min.x, Min.y, Max.z);
+		points[4] = Vector3(Min.x, Max.y, Max.z);
+		points[5] = Vector3(Max.x, Min.y, Max.z);
+		points[6] = Vector3(Max.x, Max.y, Min.z);
+		points[7] = Vector3(Max);
+
+		Quaternion q = Quaternion::CreateFromYawPitchRoll(rotation.x, rotation.y, rotation.z);
+		Vector3 p = Vector3::Transform(points[0], q);
+		Min = p;
+		Max = p;
+
+		for (auto i = 1; i < points.size(); i++)
+		{
+			p = Vector3::Transform(points[i], q);
+			UpdateMinMax(p);
+		}
+	}
+
 	Vector3 Min = { FLT_MAX, FLT_MAX, FLT_MAX };
 	Vector3 Max = { FLT_MIN, FLT_MIN, FLT_MIN };
 	BoundingBox Box = {};

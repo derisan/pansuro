@@ -33,6 +33,7 @@ private:
 
 	Entity* m_MainCamera;
 	Entity* m_Box;
+	Entity* m_Knight;
 
 	friend class Entity;
 };

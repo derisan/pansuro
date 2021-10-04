@@ -14,6 +14,7 @@
 #include "CharacterMovement.h"
 #include "ScriptComponent.h"
 #include "DebugDrawComponent.h"
+#include "BoxComponent.h"
 
 Scene::Scene()
 	: m_MainCamera(nullptr)
@@ -54,6 +55,27 @@ void Scene::OnUpdate(float dt)
 		{
 			auto& animator = view.get<AnimatorComponent>(entity);
 			animator.Update(dt);
+		}
+	}
+
+	{
+		auto view = m_Registry.view<BoxComponent, TransformComponent>();
+		for (auto entity : view)
+		{
+			// TODO: if transform is dirty, do update boxcomponent.
+
+			auto [box, transform] = view.get<BoxComponent, TransformComponent>(entity);
+			box.Update(transform);
+		}
+	}
+
+	{
+		auto& knightBox = m_Knight->GetComponent<BoxComponent>();
+		auto& boxBox = m_Box->GetComponent<BoxComponent>();
+
+		if(Intersect(knightBox, boxBox))
+		{
+			MK_INFO("Collision!");
 		}
 	}
 }
@@ -118,12 +140,13 @@ void Scene::LoadAssets()
 	m_MainCamera->AddComponent<CameraComponent>(Vector3(0.0f, 200.0f, -300.0f), Vector3::Backward);
 
 	{
-		auto knight = CreateEntity(L"knight");
-		knight->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
-		auto& animComponent = knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
+		m_Knight = CreateEntity(L"knight");
+		m_Knight->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
+		auto& animComponent = m_Knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
 		animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Idle.gpanim"));
-		knight->AddComponent<ScriptComponent>(new CharacterMovement(knight, 150.0f));
-		knight->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Knight.gpmesh", true));
+		m_Knight->AddComponent<ScriptComponent>(new CharacterMovement(m_Knight, 150.0f));
+		m_Knight->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Knight.gpmesh", true));
+		m_Knight->AddComponent<BoxComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh")->GetAABB());
 	}
 
 	{
@@ -132,6 +155,7 @@ void Scene::LoadAssets()
 		auto& tr = m_Box->GetComponent<TransformComponent>();
 		tr.SetPosition(Vector3(250.0f, 50.0f, 0.0f));
 		m_Box->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Crate.gpmesh"));
+		m_Box->AddComponent<BoxComponent>(ResourceManager::GetMesh(L"Assets/Crate.gpmesh")->GetAABB());
 	}
 
 	//{
