@@ -185,16 +185,6 @@ void Scene::LoadAssets()
 	}
 
 	//{
-	//	m_Box2 = CreateEntity(L"box");
-	//	m_Box2->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Crate.gpmesh"), ResourceManager::GetTexture(L"Assets/Crate.png"));
-	//	auto& tr = m_Box2->GetComponent<TransformComponent>();
-	//	tr.SetPosition(Vector3(0.0f, 50.0f, 0.0f));
-	//	m_Box2->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Crate.gpmesh"));
-	//	m_Box2->AddComponent<BoxComponent>(ResourceManager::GetMesh(L"Assets/Crate.gpmesh")->GetAABB());
-	//	m_Box2->AddComponent<ScriptComponent>(new CharacterMovement(m_Box2, 150.0f));
-	//}
-
-	//{
 	//	auto plane = CreateEntity(L"plane");
 	//	plane->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Plane.gpmesh"), ResourceManager::GetTexture(L"Assets/Plane.png"));
 	//	auto& tr = plane->GetComponent<TransformComponent>();

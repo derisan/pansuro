@@ -40,3 +40,5 @@ namespace fs = std::filesystem;
 #pragma comment(lib, "dxgi")
 #pragma comment(lib, "dxguid")
 #pragma comment(lib, "d3dcompiler")
+
+#pragma warning(disable:4819)
