@@ -7,13 +7,13 @@ Timer* Timer::Instance()
 	return &instance;
 }
 
-void Timer::OnInit()
+void Timer::Init()
 {
 	::QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&mFrequency));
 	::QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&mPrevCount));
 }
 
-void Timer::OnUpdate()
+void Timer::Update()
 {
 	UINT64 currentCount = 0;
 	::QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&currentCount));

@@ -2,34 +2,23 @@
 
 #include "Core.h"
 
-#include "PipelineState.h"
-
 class Mesh;
 class Scene;
 class TextureDescriptorHeap;
+class PipelineState;
 
-enum RootParam
-{
-	RP_World,
-	RP_ViewProj,
-	RP_Texture,
-	RP_BoneTransform,
-};
 
 class Engine
 {
 public:
-	~Engine();
+	~Engine() = default;
 
 	static Engine* CreateEngine(UINT width, UINT height, std::wstring title);
 
-	void OnInit();
-	void OnDestroy();
-	void OnUpdate();
-	void OnRender();
-
-	void OnKeyDown(UINT8 keycode);
-	void OnKeyUp(UINT8 keycode);
+	void Init();
+	void Shutdown();
+	void Update();
+	void Render();
 
 	UINT GetWidth() const { return m_Width; }
 	UINT GetHeight() const { return m_Height; }
@@ -41,11 +30,11 @@ public:
 	void AddUsedUploadBuffer(ComPtr<ID3D12Resource> buffer) { m_UsedUploadBuffers.push_back(buffer); }
 
 	static Engine* GetEngine() { return s_Instance; }
-	static TextureDescriptorHeap* GetTexHeap() { return s_TextureDescriptorHeap; }
+	std::unique_ptr<TextureDescriptorHeap>& GetTexHeap() { return m_TextureDescriptorHeap; }
 
-	ComPtr<ID3D12PipelineState> GetSkinnedPSO() { return m_SkinnedPSO->GetPSO(); }
-	ComPtr<ID3D12PipelineState> GetDefaultPSO() { return m_DefaultPSO->GetPSO(); }
-	ComPtr<ID3D12PipelineState> GetDebugPSO() { return m_DebugPSO->GetPSO(); }
+	ComPtr<ID3D12PipelineState> GetSkinnedPSO();
+	ComPtr<ID3D12PipelineState> GetDefaultPSO();
+	ComPtr<ID3D12PipelineState> GetDebugPSO();
 
 private:
 	Engine(UINT width, UINT height, std::wstring title);
@@ -61,10 +50,7 @@ private:
 
 private:
 	static Engine* s_Instance;
-	static TextureDescriptorHeap* s_TextureDescriptorHeap;
-
 	static const UINT kFrameCount = 2;
-
 
 	// Window properties.
 	UINT m_Width;
@@ -87,23 +73,23 @@ private:
 	ComPtr<ID3D12Resource> m_DsvBuffer;
 	ComPtr<ID3D12DescriptorHeap> m_DsvHeap;
 
-	std::unique_ptr<PipelineState> m_SkinnedPSO;
-	std::unique_ptr<PipelineState> m_DefaultPSO;
-	std::unique_ptr<PipelineState> m_DebugPSO;
-
-
 	UINT m_RtvDescriptorSize;
 	UINT m_FrameIndex;
 	HANDLE m_FenceEvent;
 	UINT64 m_FenceValue;
 
-	std::vector<ComPtr<ID3D12Resource>> m_UsedUploadBuffers;
+	std::unique_ptr<PipelineState> m_SkinnedPSO;
+	std::unique_ptr<PipelineState> m_DefaultPSO;
+	std::unique_ptr<PipelineState> m_DebugPSO;
 
-	Scene* m_ActiveScene;
+	std::unique_ptr<TextureDescriptorHeap> m_TextureDescriptorHeap;
+	std::unique_ptr<Scene> m_ActiveScene;
+
+	std::vector<ComPtr<ID3D12Resource>> m_UsedUploadBuffers;
 };
 
 #define ENGINE Engine::GetEngine()
 #define DEVICE Engine::GetEngine()->GetDevice()
 #define CMD_LIST Engine::GetEngine()->GetCmdList()
 #define RELEASE_UPLOAD_BUFFER(x) Engine::GetEngine()->AddUsedUploadBuffer(x)
-#define TEXHEAP Engine::GetTexHeap()
+#define TEXHEAP Engine::GetEngine()->GetTexHeap()

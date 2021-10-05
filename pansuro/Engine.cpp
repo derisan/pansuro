@@ -6,9 +6,9 @@
 #include "TextureDescriptorHeap.h"
 #include "Timer.h"
 #include "Input.h"
+#include "PipelineState.h"
 
 Engine* Engine::s_Instance = nullptr;
-TextureDescriptorHeap* Engine::s_TextureDescriptorHeap = nullptr;
 
 Engine::Engine(UINT width, UINT height, std::wstring title)
 	: m_Width(width), m_Height(height), m_Title(title)
@@ -24,13 +24,7 @@ Engine::Engine(UINT width, UINT height, std::wstring title)
 	m_Viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<float>(width), static_cast<float>(height));
 	m_ScissorRect = CD3DX12_RECT(0, 0, static_cast<LONG>(width), static_cast<LONG>(height));
 
-	// Create Scene
-	m_ActiveScene = new Scene();
-}
-
-Engine::~Engine()
-{
-
+	m_ActiveScene = std::make_unique<Scene>();
 }
 
 Engine* Engine::CreateEngine(UINT width, UINT height, std::wstring title)
@@ -38,41 +32,33 @@ Engine* Engine::CreateEngine(UINT width, UINT height, std::wstring title)
 	return new Engine(width, height, title);
 }
 
-void Engine::OnInit()
+void Engine::Init()
 {
 	Log::Init();
-	TIMER->OnInit();
+	TIMER->Init();
 	INPUT->Init();
-
-	MK_INFO("Engine Initializing...");
 
 	CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
 	LoadPipeline();
 	LoadAssets();
 
-	m_ActiveScene->OnInit();
+	m_ActiveScene->Init();
 }
 
-void Engine::OnDestroy()
+void Engine::Shutdown()
 {
 	WaitForPreviousFrame();
 	CloseHandle(m_FenceEvent);
-
-	if (m_ActiveScene)
-	{
-		m_ActiveScene->OnDestroy();
-		delete m_ActiveScene;
-	}
 }
 
-void Engine::OnUpdate()
+void Engine::Update()
 {
-	TIMER->OnUpdate();
+	TIMER->Update();
 	INPUT->Update();
 
 	float dt = TIMER->GetDeltaTime();
 
-	m_ActiveScene->OnUpdate(dt);
+	m_ActiveScene->Update(dt);
 
 #ifdef _DEBUG
 	UINT fps = TIMER->GetFPS();
@@ -83,28 +69,28 @@ void Engine::OnUpdate()
 #endif
 }
 
-void Engine::OnRender()
+void Engine::Render()
 {
 	BeginRender();
 
-	m_ActiveScene->OnRender();
+	m_ActiveScene->Render();
 
 	EndRender();
 }
 
-void Engine::OnKeyDown(UINT8 keycode)
+ComPtr<ID3D12PipelineState> Engine::GetSkinnedPSO()
 {
-	if (keycode == VK_ESCAPE)
-	{
-		::PostQuitMessage(0);
-	}
-
-	m_ActiveScene->OnKeyDown(keycode);
+	return m_SkinnedPSO->GetPSO();
 }
 
-void Engine::OnKeyUp(UINT8 keycode)
+ComPtr<ID3D12PipelineState> Engine::GetDefaultPSO()
 {
-	m_ActiveScene->OnKeyUp(keycode);
+	return m_DefaultPSO->GetPSO();
+}
+
+ComPtr<ID3D12PipelineState> Engine::GetDebugPSO()
+{
+	return m_DebugPSO->GetPSO();
 }
 
 void Engine::LoadPipeline()
@@ -200,7 +186,7 @@ void Engine::LoadPipeline()
 		m_Device->CreateDepthStencilView(m_DsvBuffer.Get(), nullptr, m_DsvHeap->GetCPUDescriptorHandleForHeapStart());
 	}
 
-	s_TextureDescriptorHeap = new TextureDescriptorHeap();
+	m_TextureDescriptorHeap = std::make_unique<TextureDescriptorHeap>();
 }
 
 void Engine::LoadAssets()

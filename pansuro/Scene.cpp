@@ -22,17 +22,12 @@ Scene::Scene()
 
 }
 
-Scene::~Scene()
+void Scene::Init()
 {
 
 }
 
-void Scene::OnInit()
-{
-
-}
-
-void Scene::OnUpdate(float dt)
+void Scene::Update(float dt)
 {
 	{
 		auto view = m_Registry.view<ScriptComponent>();
@@ -111,7 +106,7 @@ void Scene::OnUpdate(float dt)
 	}
 }
 
-void Scene::OnRender()
+void Scene::Render()
 {
 	auto& cameraComponent = m_MainCamera->GetComponent<CameraComponent>();
 	cameraComponent.Bind();
@@ -154,7 +149,7 @@ void Scene::OnRender()
 	}
 }
 
-void Scene::OnDestroy()
+void Scene::Shutdown()
 {
 	m_Registry.clear();
 
@@ -204,16 +199,6 @@ void Scene::LoadAssets()
 	//	plane->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Plane.gpmesh"), ResourceManager::GetTexture(L"Assets/Plane.png"));
 	//	auto& tr = plane->GetComponent<TransformComponent>();
 	//}
-}
-
-void Scene::OnKeyDown(UINT8 keycode)
-{
-
-}
-
-void Scene::OnKeyUp(UINT8 keycode)
-{
-
 }
 
 Entity* Scene::CreateEntity(const std::wstring& tag)

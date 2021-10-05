@@ -10,8 +10,8 @@ public:
 	Timer(const Timer&) = delete;
 	Timer& operator=(const Timer&) = delete;
 
-	void OnInit();
-	void OnUpdate();
+	void Init();
+	void Update();
 
 	UINT GetFPS() const { return mFPS; }
 	float GetDeltaTime() const { return mDeltaTime; }

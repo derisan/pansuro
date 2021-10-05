@@ -43,9 +43,6 @@
     <ClCompile Include="Log.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="EntryPoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -106,14 +103,17 @@
     <ClCompile Include="Script.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>Source Files\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="DebugDrawComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="BoxComponent.cpp">
       <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,9 +130,6 @@
       <Filter>Source Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="d3dHelper.h">
-      <Filter>Source Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
       <Filter>Source Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Core.h">
@@ -198,9 +195,6 @@
     <ClInclude Include="Resource.h">
       <Filter>Source Files\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Source Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="DebugDrawComponent.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
@@ -209,6 +203,12 @@
     </ClInclude>
     <ClInclude Include="BoxComponent.h">
       <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Source Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

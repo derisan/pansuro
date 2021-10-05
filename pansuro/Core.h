@@ -115,6 +115,14 @@ struct AABB
 	BoundingBox Box = {};
 };
 
+enum RootParam
+{
+	RP_World,
+	RP_ViewProj,
+	RP_Texture,
+	RP_BoneTransform,
+};
+
 inline std::wstring s2ws(const std::string& s)
 {
 	UINT len;

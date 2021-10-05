@@ -34,7 +34,7 @@ int Application::Run(Engine* engine, HINSTANCE hInstance, int nCmdShow)
 	
 	AllocConsole();
 
-	engine->OnInit();
+	engine->Init();
 
 	ShowWindow(m_Hwnd, nCmdShow);
 
@@ -48,7 +48,7 @@ int Application::Run(Engine* engine, HINSTANCE hInstance, int nCmdShow)
 		}
 	}
 
-	engine->OnDestroy();
+	engine->Shutdown();
 
 	return static_cast<char>(msg.wParam);
 }
@@ -66,25 +66,11 @@ LRESULT CALLBACK Application::WindowProc(HWND hwnd, UINT message, WPARAM wParam,
 	}
 	return 0;
 
-	case WM_KEYDOWN:
-		if (engine)
-		{
-			engine->OnKeyDown(static_cast<UINT8>(wParam));
-		}
-		return 0;
-
-	case WM_KEYUP:
-		if (engine)
-		{
-			engine->OnKeyUp(static_cast<UINT8>(wParam));
-		}
-		return 0;
-
 	case WM_PAINT:
 		if (engine)
 		{
-			engine->OnUpdate();
-			engine->OnRender();
+			engine->Update();
+			engine->Render();
 		}
 		return 0;
 

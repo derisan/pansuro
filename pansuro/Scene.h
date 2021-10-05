@@ -11,15 +11,12 @@ class Scene
 {
 public:
 	Scene();
-	~Scene();
+	~Scene() { Shutdown(); }
 
-	void OnInit();
-	void OnUpdate(float dt);
-	void OnRender();
-	void OnDestroy();
-
-	void OnKeyDown(UINT8 keycode);
-	void OnKeyUp(UINT8 keycode);
+	void Init();
+	void Update(float dt);
+	void Render();
+	void Shutdown();
 
 	Entity* CreateEntity(const std::wstring& tag = L"default");
 	void DestroyEntityWithID(MyUUID id);
