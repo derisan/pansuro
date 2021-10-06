@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "StateMachine.h"
 
 class Skeleton;
 class Animation;
@@ -28,5 +29,7 @@ private:
 	float m_AnimTime;
 
 	UploadBuffer<MatrixPalette> m_UploadBuffer;
+
+	std::unique_ptr<StateMachine> m_StateMachine;
 };
 

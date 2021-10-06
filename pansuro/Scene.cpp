@@ -168,8 +168,7 @@ void Scene::LoadAssets()
 	{
 		m_Knight = CreateEntity(L"knight");
 		m_Knight->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
-		auto& animComponent = m_Knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
-		animComponent.PlayAnimation(ResourceManager::GetAnimation(L"Assets/Idle.gpanim"));
+		m_Knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
 		m_Knight->AddComponent<ScriptComponent>(new CharacterMovement(m_Knight, 150.0f));
 		m_Knight->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Knight.gpmesh", true));
 		m_Knight->AddComponent<BoxComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh")->GetAABB());
@@ -183,12 +182,6 @@ void Scene::LoadAssets()
 		m_Box->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Crate.gpmesh"));
 		m_Box->AddComponent<BoxComponent>(ResourceManager::GetMesh(L"Assets/Crate.gpmesh")->GetAABB());
 	}
-
-	//{
-	//	auto plane = CreateEntity(L"plane");
-	//	plane->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Plane.gpmesh"), ResourceManager::GetTexture(L"Assets/Plane.png"));
-	//	auto& tr = plane->GetComponent<TransformComponent>();
-	//}
 }
 
 Entity* Scene::CreateEntity(const std::wstring& tag)

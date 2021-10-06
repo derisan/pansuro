@@ -8,6 +8,7 @@
 AnimatorComponent::AnimatorComponent(Skeleton* skel)
 	: m_Skeleton(skel)
 	, m_UploadBuffer(DEVICE.Get(), 1, true)
+	, m_StateMachine(std::make_unique<StateMachine>(this))
 {
 
 }
@@ -31,6 +32,8 @@ void AnimatorComponent::Update(float dt)
 		}
 
 		ComputeMatrixPalette();
+
+		m_StateMachine->Update();
 	}
 }
 
