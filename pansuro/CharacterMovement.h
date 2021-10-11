@@ -6,6 +6,7 @@
 #include "TransformComponent.h"
 #include "AnimatorComponent.h"
 #include "ResourceManager.h"
+#include "State.h"
 
 #include "Input.h"
 
@@ -16,6 +17,7 @@ public:
 		: Script(owner)
 		, m_Speed(speed)
 		, transform(GetComponent<TransformComponent>())
+		, animator(GetComponent<AnimatorComponent>())
 	{}
 
 	virtual void OnCreate() override
@@ -25,29 +27,41 @@ public:
 
 	virtual void OnUpdate(float dt) override
 	{
+		float speed = 0.0f;
+
 		if (INPUT->IsButtonHold(KeyType::W))
 		{
+			speed = m_Speed;
 			transform.RotateYaw(0.0f);
-			transform.MoveForward(m_Speed * dt);
-			
 		}
 
-		if (INPUT->IsButtonHold(KeyType::A))
+		else if (INPUT->IsButtonHold(KeyType::A))
 		{
+			speed = m_Speed;
 			transform.RotateYaw(-90.0f);
-			transform.MoveForward(m_Speed * dt);
 		}
 
-		if (INPUT->IsButtonHold(KeyType::S))
+		else if (INPUT->IsButtonHold(KeyType::S))
 		{
+			speed = m_Speed;
 			transform.RotateYaw(180.0f);
-			transform.MoveForward(m_Speed * dt);
 		}
 
-		if (INPUT->IsButtonHold(KeyType::D))
+		else if (INPUT->IsButtonHold(KeyType::D))
 		{
+			speed = m_Speed;
 			transform.RotateYaw(90.0f);
-			transform.MoveForward(m_Speed * dt);
+		}
+
+		transform.MoveForward(speed * dt);
+
+		if (speed != 0.0f)
+		{
+			animator.GetStateMachine()->ChangeState(RunState::Instance());
+		}
+		else
+		{
+			animator.GetStateMachine()->ChangeState(IdleState::Instance());
 		}
 	}
 
@@ -60,4 +74,5 @@ private:
 	float m_Speed;
 
 	TransformComponent& transform;
+	AnimatorComponent& animator;
 };

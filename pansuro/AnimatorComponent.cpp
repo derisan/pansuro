@@ -39,6 +39,11 @@ void AnimatorComponent::Update(float dt)
 
 float AnimatorComponent::PlayAnimation(Animation* anim, float playRate /*= 1.0f*/)
 {
+	if (m_Animation == anim)
+	{
+		return 0.0f;
+	}
+
 	m_Animation = anim;
 	m_AnimTime = 0.0f;
 	m_AnimPlayRate = playRate;

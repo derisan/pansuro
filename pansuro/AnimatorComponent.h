@@ -16,6 +16,8 @@ public:
 
 	float PlayAnimation(Animation* anim, float playRate = 1.0f);
 
+	const std::unique_ptr<StateMachine>& GetStateMachine() const { return m_StateMachine; }
+
 private:
 	void ComputeMatrixPalette();
 

@@ -19,10 +19,7 @@ void IdleState::Enter(StateMachine* sm)
 
 void IdleState::Update(StateMachine* sm)
 {
-	if (INPUT->IsButtonDown(KeyType::LBUTTON))
-	{
-		sm->ChangeState(RunState::Instance());
-	}
+
 }
 
 void IdleState::Exit(StateMachine* sm)
@@ -43,10 +40,7 @@ void RunState::Enter(StateMachine* sm)
 
 void RunState::Update(StateMachine* sm)
 {
-	if (INPUT->IsButtonDown(KeyType::RBUTTON))
-	{
-		sm->ChangeState(IdleState::Instance());
-	}
+
 }
 
 void RunState::Exit(StateMachine* sm)
