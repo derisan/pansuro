@@ -24,12 +24,14 @@ public:
 	void LoadAssets();
 
 private:
+	void CreateFloor();
+
+private:
 	entt::registry m_Registry;
 
 	std::unordered_map<MyUUID, Entity*> m_EntityMap;
 
 	Entity* m_MainCamera;
-	Entity* m_Box;
 	Entity* m_Knight;
 
 	friend class Entity;
