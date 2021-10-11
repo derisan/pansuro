@@ -115,11 +115,10 @@ void Scene::Render()
 	CMD_LIST->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 	{
 		CMD_LIST->SetPipelineState(ENGINE->GetSkinnedPSO().Get());
-		auto group = m_Registry.view<MeshRendererComponent, AnimatorComponent, TransformComponent>();
-		for (auto entity : group)
+		auto view = m_Registry.view<AnimatorComponent, MeshRendererComponent, TransformComponent>();
+		for (auto entity : view)
 		{
-			auto [meshRenderer, transform] = group.get<MeshRendererComponent, TransformComponent>(entity);
-			auto& animator = group.get<AnimatorComponent>(entity);
+			auto [animator, meshRenderer, transform] = view.get<AnimatorComponent, MeshRendererComponent, TransformComponent>(entity);
 			animator.Bind();
 			transform.Bind();
 			meshRenderer.Bind();
@@ -169,7 +168,7 @@ void Scene::LoadAssets()
 		m_Knight = CreateEntity(L"knight");
 		m_Knight->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
 		m_Knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
-		m_Knight->AddComponent<ScriptComponent>(new CharacterMovement(m_Knight, 150.0f));
+		m_Knight->AddComponent<ScriptComponent>(new CharacterMovement(m_Knight, 200.0f));
 		m_Knight->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Knight.gpmesh", true));
 		m_Knight->AddComponent<BoxComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh")->GetAABB());
 	}
@@ -177,6 +176,7 @@ void Scene::LoadAssets()
 	camera.SetFollowEntity(m_Knight);
 
 	CreateFloor();
+	CreateWood();
 }
 
 void Scene::CreateFloor()
@@ -191,6 +191,16 @@ void Scene::CreateFloor()
 			tr.SetPosition(Vector3(j * 100.0f, -100.0f, i * 100.0f));
 		}
 	}
+}
+
+void Scene::CreateWood()
+{
+	auto box = CreateEntity(L"Wood");
+	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Cube.gpmesh"), ResourceManager::GetTexture(L"Assets/Brown.png"));
+	auto& tr = box->GetComponent<TransformComponent>();
+	tr.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+	box->AddComponent<DebugDrawComponent>(ResourceManager::GetDebugMesh(L"Assets/Cube.gpmesh"));
+	box->AddComponent<BoxComponent>(ResourceManager::GetMesh(L"Assets/Cube.gpmesh")->GetAABB());
 }
 
 Entity* Scene::CreateEntity(const std::wstring& tag)

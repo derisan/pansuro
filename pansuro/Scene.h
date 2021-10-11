@@ -25,6 +25,7 @@ public:
 
 private:
 	void CreateFloor();
+	void CreateWood();
 
 private:
 	entt::registry m_Registry;

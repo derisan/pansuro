@@ -3,6 +3,7 @@
 #include "Core.h"
 
 class StateMachine;
+class Script;
 
 class State
 {
@@ -10,7 +11,7 @@ public:
 	virtual ~State() = default;
 
 	virtual void Enter(StateMachine*) = 0;
-	virtual void Update(StateMachine*) = 0;
+	virtual void Update(StateMachine*, Script*) = 0;
 	virtual void Exit(StateMachine*) = 0;
 };
 
@@ -24,7 +25,7 @@ public:
 
 	virtual void Enter(StateMachine* sm) override;
 
-	virtual void Update(StateMachine* sm) override;
+	virtual void Update(StateMachine* sm, Script* sc) override;
 
 	virtual void Exit(StateMachine* sm) override;
 	
@@ -42,7 +43,7 @@ public:
 
 	virtual void Enter(StateMachine* sm) override;
 
-	virtual void Update(StateMachine* sm) override;
+	virtual void Update(StateMachine* sm, Script* sc) override;
 
 	virtual void Exit(StateMachine* sm) override;
 
@@ -60,7 +61,7 @@ public:
 
 	virtual void Enter(StateMachine* sm) override;
 
-	virtual void Update(StateMachine* sm) override;
+	virtual void Update(StateMachine* sm, Script* sc) override;
 
 	virtual void Exit(StateMachine* sm) override;
 

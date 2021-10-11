@@ -3,11 +3,13 @@
 
 #include "AnimatorComponent.h"
 #include "State.h"
+#include "Script.h"
 
 StateMachine::StateMachine(AnimatorComponent* animator)
 	: m_Animator(animator)
 	, m_CurrentState(IdleState::Instance())
 	, m_PreviousState(nullptr)
+	, m_Script(nullptr)
 {
 	m_CurrentState->Enter(this);
 }
@@ -19,7 +21,10 @@ StateMachine::~StateMachine()
 
 void StateMachine::Update()
 {
-	m_CurrentState->Update(this);
+	if (m_Script)
+	{
+		m_CurrentState->Update(this, m_Script);
+	}
 }
 
 void StateMachine::ChangeState(State* newState)

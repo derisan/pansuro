@@ -16,53 +16,50 @@ public:
 	CharacterMovement(Entity* owner, float speed = 50.0f)
 		: Script(owner)
 		, m_Speed(speed)
+		, m_CurrentSpeed(0.0f)
 		, transform(GetComponent<TransformComponent>())
 		, animator(GetComponent<AnimatorComponent>())
 	{}
 
 	virtual void OnCreate() override
 	{
-		
+		animator.GetStateMachine()->SetScript(this);
 	}
 
 	virtual void OnUpdate(float dt) override
 	{
-		float speed = 0.0f;
+		m_CurrentSpeed = 0.0f;
 
 		if (INPUT->IsButtonHold(KeyType::W))
 		{
-			speed = m_Speed;
+			m_CurrentSpeed = m_Speed;
 			transform.RotateYaw(0.0f);
 		}
 
 		else if (INPUT->IsButtonHold(KeyType::A))
 		{
-			speed = m_Speed;
+			m_CurrentSpeed = m_Speed;
 			transform.RotateYaw(-90.0f);
 		}
 
 		else if (INPUT->IsButtonHold(KeyType::S))
 		{
-			speed = m_Speed;
+			m_CurrentSpeed = m_Speed;
 			transform.RotateYaw(180.0f);
 		}
 
 		else if (INPUT->IsButtonHold(KeyType::D))
 		{
-			speed = m_Speed;
+			m_CurrentSpeed = m_Speed;
 			transform.RotateYaw(90.0f);
 		}
 
-		transform.MoveForward(speed * dt);
+		transform.MoveForward(m_CurrentSpeed * dt);
+	}
 
-		if (speed != 0.0f)
-		{
-			animator.GetStateMachine()->ChangeState(RunState::Instance());
-		}
-		else
-		{
-			animator.GetStateMachine()->ChangeState(IdleState::Instance());
-		}
+	float GetCurrentSpeed() const
+	{
+		return m_CurrentSpeed;
 	}
 
 	virtual void OnDestroy() override
@@ -71,7 +68,8 @@ public:
 	}
 
 private:
-	float m_Speed;
+	const float m_Speed;
+	float m_CurrentSpeed;
 
 	TransformComponent& transform;
 	AnimatorComponent& animator;

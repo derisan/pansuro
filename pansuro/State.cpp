@@ -4,7 +4,7 @@
 #include "StateMachine.h"
 #include "ResourceManager.h"
 #include "Input.h"
-
+#include "CharacterMovement.h"
 
 IdleState* IdleState::Instance()
 {
@@ -17,9 +17,19 @@ void IdleState::Enter(StateMachine* sm)
 	sm->PlayAnimation(ResourceManager::GetAnimation(L"Assets/Knight_Idle.gpanim"));
 }
 
-void IdleState::Update(StateMachine* sm)
+void IdleState::Update(StateMachine* sm, Script* sc)
 {
+	auto cm = (CharacterMovement*)sc;
 
+	if (INPUT->IsButtonDown(KeyType::LBUTTON))
+	{
+		sm->ChangeState(PunchState::Instance());
+	}
+
+	else if (cm->GetCurrentSpeed() > 0.0f)
+	{
+		sm->ChangeState(RunState::Instance());
+	}
 }
 
 void IdleState::Exit(StateMachine* sm)
@@ -38,9 +48,19 @@ void RunState::Enter(StateMachine* sm)
 	sm->PlayAnimation(ResourceManager::GetAnimation(L"Assets/Knight_Run.gpanim"));
 }
 
-void RunState::Update(StateMachine* sm)
+void RunState::Update(StateMachine* sm, Script* sc)
 {
+	auto cm = (CharacterMovement*)sc;
 
+	if (INPUT->IsButtonDown(KeyType::LBUTTON))
+	{
+		sm->ChangeState(PunchState::Instance());
+	}
+
+	else if (cm->GetCurrentSpeed() == 0.0f)
+	{
+		sm->ChangeState(IdleState::Instance());
+	}
 }
 
 void RunState::Exit(StateMachine* sm)
@@ -59,9 +79,14 @@ void PunchState::Enter(StateMachine* sm)
 	sm->PlayAnimation(ResourceManager::GetAnimation(L"Assets/Knight_Punch.gpanim"));
 }
 
-void PunchState::Update(StateMachine* sm)
+void PunchState::Update(StateMachine* sm, Script* sc)
 {
+	auto cm = (CharacterMovement*)sc;
 
+	if (cm->GetCurrentSpeed() > 0.0f)
+	{
+		sm->ChangeState(RunState::Instance());
+	}
 }
 
 void PunchState::Exit(StateMachine* sm)
