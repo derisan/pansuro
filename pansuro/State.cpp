@@ -47,3 +47,24 @@ void RunState::Exit(StateMachine* sm)
 {
 
 }
+
+PunchState* PunchState::Instance()
+{
+	static PunchState instance;
+	return &instance;
+}
+
+void PunchState::Enter(StateMachine* sm)
+{
+	sm->PlayAnimation(ResourceManager::GetAnimation(L"Assets/Knight_Punch.gpanim"));
+}
+
+void PunchState::Update(StateMachine* sm)
+{
+
+}
+
+void PunchState::Exit(StateMachine* sm)
+{
+
+}

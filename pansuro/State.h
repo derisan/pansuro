@@ -49,3 +49,21 @@ public:
 private:
 	RunState() = default;
 };
+
+class PunchState : public State
+{
+public:
+	PunchState(const PunchState&) = delete;
+	PunchState& operator=(const PunchState&) = delete;
+
+	static PunchState* Instance();
+
+	virtual void Enter(StateMachine* sm) override;
+
+	virtual void Update(StateMachine* sm) override;
+
+	virtual void Exit(StateMachine* sm) override;
+
+private:
+	PunchState() = default;
+};

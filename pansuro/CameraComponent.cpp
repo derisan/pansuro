@@ -27,7 +27,7 @@ void CameraComponent::Bind()
 		const auto& entityPos = transform.GetPosition();
 
 		m_Position.x = entityPos.x;
-		m_Position.z = entityPos.z - 100.0f;
+		m_Position.z = entityPos.z - 300.0f;
 		
 		m_Target = entityPos;
 	}

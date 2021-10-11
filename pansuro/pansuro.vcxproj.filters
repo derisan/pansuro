@@ -29,7 +29,7 @@
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{97fcc84c-8203-4161-a0aa-4b9e3fa30825}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Test">
+    <Filter Include="Source Files\NativeScript">
       <UniqueIdentifier>{385a3d4f-7406-469a-b848-079659a60e55}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -196,7 +196,7 @@
       <Filter>Source Files\Scene</Filter>
     </ClInclude>
     <ClInclude Include="CharacterMovement.h">
-      <Filter>Source Files\Test</Filter>
+      <Filter>Source Files\NativeScript</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Source Files\Resources</Filter>
