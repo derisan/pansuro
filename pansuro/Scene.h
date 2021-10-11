@@ -18,7 +18,7 @@ public:
 	void Render();
 	void Shutdown();
 
-	Entity* CreateEntity(const std::wstring& tag = L"default");
+	Entity* CreateEntity();
 	void DestroyEntityWithID(MyUUID id);
 
 	void LoadAssets();

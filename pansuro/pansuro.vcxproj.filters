@@ -79,9 +79,6 @@
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="TagComponent.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="IDComponent.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
@@ -171,7 +168,7 @@
     <ClInclude Include="Entity.h">
       <Filter>Source Files\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="TagComponent.h">
+    <ClInclude Include="Tags.h">
       <Filter>Source Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="IDComponent.h">

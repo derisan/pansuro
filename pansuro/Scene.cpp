@@ -8,13 +8,13 @@
 #include "TransformComponent.h"
 #include "MeshRendererComponent.h"
 #include "IDComponent.h"
-#include "TagComponent.h"
 #include "Entity.h"
 #include "AnimatorComponent.h"
 #include "CharacterMovement.h"
 #include "ScriptComponent.h"
 #include "DebugDrawComponent.h"
 #include "BoxComponent.h"
+#include "Tags.h"
 
 Scene::Scene()
 	: m_MainCamera(nullptr)
@@ -64,46 +64,51 @@ void Scene::Update(float dt)
 		}
 	}
 
-	//{
-	//	auto& boxBox1 = m_Box->GetComponent<BoxComponent>();
-	//	auto& knightBox = m_Knight->GetComponent<BoxComponent>();
+	{
+		auto& knightBox = m_Knight->GetComponent<BoxComponent>();
 
-	//	if(Intersect(boxBox1, knightBox))
-	//	{
-	//		float dx1 = boxBox1.GetWorldAABB().Max.x - knightBox.GetWorldAABB().Min.x;
-	//		float dx2 = boxBox1.GetWorldAABB().Min.x - knightBox.GetWorldAABB().Max.x;
-	//		float dy1 = boxBox1.GetWorldAABB().Max.y - knightBox.GetWorldAABB().Min.y;
-	//		float dy2 = boxBox1.GetWorldAABB().Min.y - knightBox.GetWorldAABB().Max.y;
-	//		float dz1 = boxBox1.GetWorldAABB().Max.z - knightBox.GetWorldAABB().Min.z;
-	//		float dz2 = boxBox1.GetWorldAABB().Min.z - knightBox.GetWorldAABB().Max.z;
+		auto view = m_Registry.view<Resource, BoxComponent>();
+		for (auto entity : view)
+		{
+			auto& resourceBox = view.get<BoxComponent>(entity);
 
-	//		float dx = abs(dx1) < abs(dx2) ?
-	//			dx1 : dx2;
-	//		float dy = abs(dy1) < abs(dy2) ?
-	//			dy1 : dy2;
-	//		float dz = abs(dz1) < abs(dz2) ?
-	//			dz1 : dz2;
+			if (Intersect(resourceBox, knightBox))
+			{
+				float dx1 = resourceBox.GetWorldAABB().Max.x - knightBox.GetWorldAABB().Min.x;
+				float dx2 = resourceBox.GetWorldAABB().Min.x - knightBox.GetWorldAABB().Max.x;
+				float dy1 = resourceBox.GetWorldAABB().Max.y - knightBox.GetWorldAABB().Min.y;
+				float dy2 = resourceBox.GetWorldAABB().Min.y - knightBox.GetWorldAABB().Max.y;
+				float dz1 = resourceBox.GetWorldAABB().Max.z - knightBox.GetWorldAABB().Min.z;
+				float dz2 = resourceBox.GetWorldAABB().Min.z - knightBox.GetWorldAABB().Max.z;
 
-	//		TransformComponent& transform = m_Knight->GetComponent<TransformComponent>();
-	//		Vector3 pos = transform.GetPosition();
+				float dx = abs(dx1) < abs(dx2) ?
+					dx1 : dx2;
+				float dy = abs(dy1) < abs(dy2) ?
+					dy1 : dy2;
+				float dz = abs(dz1) < abs(dz2) ?
+					dz1 : dz2;
 
-	//		if (abs(dx) <= abs(dy) && abs(dx) <= abs(dz))
-	//		{
-	//			pos.x += dx;
-	//		}
-	//		else if (abs(dy) <= abs(dx) && abs(dy) <= abs(dz))
-	//		{
-	//			pos.y += dy;
-	//		}
-	//		else
-	//		{
-	//			pos.z += dz;
-	//		}
+				TransformComponent& transform = m_Knight->GetComponent<TransformComponent>();
+				Vector3 pos = transform.GetPosition();
 
-	//		transform.SetPosition(pos);
-	//		knightBox.Update(transform);
-	//	}
-	//}
+				if (abs(dx) <= abs(dy) && abs(dx) <= abs(dz))
+				{
+					pos.x += dx;
+				}
+				else if (abs(dy) <= abs(dx) && abs(dy) <= abs(dz))
+				{
+					pos.y += dy;
+				}
+				else
+				{
+					pos.z += dz;
+				}
+
+				transform.SetPosition(pos);
+				knightBox.Update(transform);
+			}
+		}
+	}
 }
 
 void Scene::Render()
@@ -161,11 +166,13 @@ void Scene::Shutdown()
 
 void Scene::LoadAssets()
 {
-	m_MainCamera = CreateEntity(L"MainCamera");
+	m_MainCamera = CreateEntity();
 	auto& camera = m_MainCamera->AddComponent<CameraComponent>(Vector3(0.0f, 700.0f, 0.0f));
+	m_MainCamera->SetTag<Camera>();
 
 	{
-		m_Knight = CreateEntity(L"knight");
+		m_Knight = CreateEntity();
+		m_Knight->SetTag<Player>();
 		m_Knight->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
 		m_Knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
 		m_Knight->AddComponent<ScriptComponent>(new CharacterMovement(m_Knight, 200.0f));
@@ -185,7 +192,8 @@ void Scene::CreateFloor()
 	{
 		for (int j = 0; j < 10; j++)
 		{
-			auto box = CreateEntity(L"Floor");
+			auto box = CreateEntity();
+			box->SetTag<Floor>();
 			box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Cube.gpmesh"), ResourceManager::GetTexture(L"Assets/Green.png"));
 			auto& tr = box->GetComponent<TransformComponent>();
 			tr.SetPosition(Vector3(j * 100.0f, -100.0f, i * 100.0f));
@@ -195,7 +203,8 @@ void Scene::CreateFloor()
 
 void Scene::CreateWood()
 {
-	auto box = CreateEntity(L"Wood");
+	auto box = CreateEntity();
+	box->SetTag<Resource>();
 	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Cube.gpmesh"), ResourceManager::GetTexture(L"Assets/Brown.png"));
 	auto& tr = box->GetComponent<TransformComponent>();
 	tr.SetPosition(Vector3(0.0f, 0.0f, 0.0f));
@@ -203,11 +212,10 @@ void Scene::CreateWood()
 	box->AddComponent<BoxComponent>(ResourceManager::GetMesh(L"Assets/Cube.gpmesh")->GetAABB());
 }
 
-Entity* Scene::CreateEntity(const std::wstring& tag)
+Entity* Scene::CreateEntity()
 {
 	Entity* entity = new Entity(m_Registry.create(), this);
 	entity->AddComponent<TransformComponent>();
-	entity->AddComponent<TagComponent>(tag);
 	auto& id = entity->AddComponent<IDComponent>();
 
 	m_EntityMap[id.ID] = entity;
