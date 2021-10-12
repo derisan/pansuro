@@ -8,7 +8,7 @@
 StateMachine::StateMachine(AnimatorComponent* animator)
 	: m_Animator(animator)
 	, m_CurrentState(IdleState::Instance())
-	, m_PreviousState(nullptr)
+	, m_PreviousState(m_CurrentState)
 	, m_Script(nullptr)
 {
 	m_CurrentState->Enter(this);
@@ -35,7 +35,12 @@ void StateMachine::ChangeState(State* newState)
 	m_CurrentState->Enter(this);
 }
 
-void StateMachine::PlayAnimation(Animation* animation)
+void StateMachine::RevertPreviousState()
 {
-	m_Animator->PlayAnimation(animation);
+	ChangeState(m_PreviousState);
+}
+
+void StateMachine::PlayAnimation(Animation* animation, bool bLoop, State* toState, float playRate)
+{
+	m_Animator->PlayAnimation(animation, bLoop, toState, playRate);
 }

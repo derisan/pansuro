@@ -76,7 +76,7 @@ PunchState* PunchState::Instance()
 
 void PunchState::Enter(StateMachine* sm)
 {
-	sm->PlayAnimation(ResourceManager::GetAnimation(L"Assets/Knight_Punch.gpanim"));
+	sm->PlayAnimation(ResourceManager::GetAnimation(L"Assets/Knight_Punch.gpanim"), false, IdleState::Instance(), 2.0f);
 }
 
 void PunchState::Update(StateMachine* sm, Script* sc)

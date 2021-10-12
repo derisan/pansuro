@@ -16,7 +16,8 @@ public:
 	void Update();
 
 	void ChangeState(State* newState);
-	void PlayAnimation(Animation* animation);
+	void RevertPreviousState();
+	void PlayAnimation(Animation* animation, bool bLoop = true, State* toState = nullptr, float playRate = 1.0f);
 
 	void SetScript(Script* script) { m_Script = script; }
 

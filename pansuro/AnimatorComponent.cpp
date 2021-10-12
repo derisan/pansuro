@@ -4,11 +4,14 @@
 #include "Skeleton.h"
 #include "Engine.h"
 #include "Animation.h"
+#include "State.h"
 
 AnimatorComponent::AnimatorComponent(Skeleton* skel)
 	: m_Skeleton(skel)
 	, m_UploadBuffer(DEVICE.Get(), 1, true)
 	, m_StateMachine(std::make_unique<StateMachine>(this))
+	, m_bLoop(true)
+	, m_ToState(nullptr)
 {
 
 }
@@ -26,9 +29,24 @@ void AnimatorComponent::Update(float dt)
 	{
 		m_AnimTime += dt * m_AnimPlayRate;
 
-		while (m_AnimTime > m_Animation->GetDuration())
+		if (m_AnimTime > m_Animation->GetDuration())
 		{
-			m_AnimTime -= m_Animation->GetDuration();
+			if (m_bLoop)
+			{
+				m_AnimTime -= m_Animation->GetDuration();
+			}
+			else 
+			{
+				if (m_ToState)
+				{
+					m_StateMachine->ChangeState(m_ToState);
+					m_ToState = nullptr;
+				}
+				else
+				{
+					m_StateMachine->RevertPreviousState();
+				}
+			}
 		}
 
 		ComputeMatrixPalette();
@@ -37,7 +55,7 @@ void AnimatorComponent::Update(float dt)
 	}
 }
 
-float AnimatorComponent::PlayAnimation(Animation* anim, float playRate /*= 1.0f*/)
+float AnimatorComponent::PlayAnimation(Animation* anim, bool bLoop, State* toState, float playRate)
 {
 	if (m_Animation == anim)
 	{
@@ -46,6 +64,9 @@ float AnimatorComponent::PlayAnimation(Animation* anim, float playRate /*= 1.0f*
 
 	m_Animation = anim;
 	m_AnimTime = 0.0f;
+
+	m_bLoop = bLoop;
+	m_ToState = toState;
 	m_AnimPlayRate = playRate;
 
 	if (!m_Animation)

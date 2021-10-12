@@ -32,6 +32,9 @@
     <Filter Include="Source Files\NativeScript">
       <UniqueIdentifier>{385a3d4f-7406-469a-b848-079659a60e55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Animation">
+      <UniqueIdentifier>{345285d5-23be-40be-ac47-f513eba4935e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -112,11 +115,11 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="StateMachine.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="State.cpp">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine.cpp">
+      <Filter>Source Files\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -213,11 +216,11 @@
     <ClInclude Include="Timer.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="StateMachine.h">
-      <Filter>Source Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="State.h">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Source Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>Source Files\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

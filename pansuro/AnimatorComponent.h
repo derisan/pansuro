@@ -5,6 +5,7 @@
 
 class Skeleton;
 class Animation;
+class State;
 
 class AnimatorComponent
 {
@@ -14,7 +15,7 @@ public:
 	void Bind();
 	void Update(float dt);
 
-	float PlayAnimation(Animation* anim, float playRate = 1.0f);
+	float PlayAnimation(Animation* anim, bool bLoop = true, State* toState = nullptr, float playRate = 1.0f);
 
 	const std::unique_ptr<StateMachine>& GetStateMachine() const { return m_StateMachine; }
 
@@ -29,6 +30,8 @@ private:
 
 	float m_AnimPlayRate;
 	float m_AnimTime;
+	bool m_bLoop;
+	State* m_ToState;
 
 	UploadBuffer<MatrixPalette> m_UploadBuffer;
 
