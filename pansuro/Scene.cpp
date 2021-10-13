@@ -168,11 +168,11 @@ void Scene::LoadAssets()
 {
 	m_MainCamera = CreateEntity();
 	auto& camera = m_MainCamera->AddComponent<CameraComponent>(Vector3(0.0f, 700.0f, 0.0f));
-	m_MainCamera->SetTag<Camera>();
+	m_MainCamera->AddComponent<Camera>();
 
 	{
 		m_Knight = CreateEntity();
-		m_Knight->SetTag<Player>();
+		m_Knight->AddComponent<Player>();
 		m_Knight->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Knight.gpmesh"), ResourceManager::GetTexture(L"Assets/Knight.png"));
 		m_Knight->AddComponent<AnimatorComponent>(ResourceManager::GetSkeleton(L"Assets/Knight.gpskel"));
 		m_Knight->AddComponent<ScriptComponent>(new CharacterMovement(m_Knight, 200.0f));
@@ -193,7 +193,7 @@ void Scene::CreateFloor()
 		for (int j = 0; j < 10; j++)
 		{
 			auto box = CreateEntity();
-			box->SetTag<Floor>();
+			box->AddComponent<Floor>();
 			box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Cube.gpmesh"), ResourceManager::GetTexture(L"Assets/Green.png"));
 			auto& tr = box->GetComponent<TransformComponent>();
 			tr.SetPosition(Vector3(j * 100.0f, -100.0f, i * 100.0f));
@@ -204,7 +204,7 @@ void Scene::CreateFloor()
 void Scene::CreateWood()
 {
 	auto box = CreateEntity();
-	box->SetTag<Resource>();
+	box->AddComponent<Resource>();
 	box->AddComponent<MeshRendererComponent>(ResourceManager::GetMesh(L"Assets/Cube.gpmesh"), ResourceManager::GetTexture(L"Assets/Brown.png"));
 	auto& tr = box->GetComponent<TransformComponent>();
 	tr.SetPosition(Vector3(0.0f, 0.0f, 0.0f));

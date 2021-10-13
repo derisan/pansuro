@@ -1,6 +1,6 @@
 #pragma once
 
-struct Player {};
-struct Floor {};
-struct Resource {};
-struct Camera {};
+struct Player { bool PlaceHolder; };
+struct Floor { bool PlaceHolder; };
+struct Resource { bool PlaceHolder; };
+struct Camera { bool PlaceHolder; };

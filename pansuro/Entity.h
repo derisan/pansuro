@@ -19,13 +19,6 @@ public:
 	}
 
 	template<typename T>
-	void SetTag()
-	{
-		MK_ASSERT(!HasComponent<T>(), "Entity already has tag!");
-		m_Scene->m_Registry.emplace<T>(m_EntityHandle);
-	}
-
-	template<typename T>
 	T& GetComponent()
 	{
 		MK_ASSERT(HasComponent<T>(), "Entity does not have component!");
