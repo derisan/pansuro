@@ -228,6 +228,9 @@
     <ClInclude Include="Types.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="TestScript.h">
+      <Filter>Source Files\NativeScript</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\skinned.hlsli">

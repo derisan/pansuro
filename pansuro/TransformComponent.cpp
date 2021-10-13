@@ -21,11 +21,6 @@ TransformComponent::TransformComponent(const Vector3& position, const Vector3& r
 
 }
 
-TransformComponent::~TransformComponent()
-{
-
-}
-
 void TransformComponent::Bind()
 {
 	Matrix worldMat = Matrix::CreateScale(m_Scale);

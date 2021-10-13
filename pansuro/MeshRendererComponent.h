@@ -10,7 +10,6 @@ class MeshRendererComponent
 public:
 	MeshRendererComponent();
 	MeshRendererComponent(Mesh* mesh, Texture* texture);
-	~MeshRendererComponent();
 
 	void SetMesh(Mesh* mesh) { m_Mesh = mesh; }
 	void SetTexture(Texture* texture) { m_Texture = texture; }

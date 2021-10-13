@@ -20,11 +20,6 @@ MeshRendererComponent::MeshRendererComponent(Mesh* mesh, Texture* texture)
 
 }
 
-MeshRendererComponent::~MeshRendererComponent()
-{
-
-}
-
 void MeshRendererComponent::Bind()
 {
 	CMD_LIST->SetGraphicsRootDescriptorTable(RP_Texture, m_Texture->GetGpuHandle());

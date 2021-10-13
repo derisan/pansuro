@@ -150,6 +150,7 @@
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="Tags.h" />
+    <ClInclude Include="TestScript.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureDescriptorHeap.h" />
     <ClInclude Include="Timer.h" />

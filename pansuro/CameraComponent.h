@@ -9,7 +9,6 @@ class CameraComponent
 {
 public:
 	CameraComponent(const Vector3& position, const Vector3& target = Vector3::Backward, const Vector3& up = Vector3::UnitY, float fov = 90.0f);
-	~CameraComponent();
 
 	void Bind();
 	void SetFollowEntity(Entity* entity) { m_FollowEntity = entity; }

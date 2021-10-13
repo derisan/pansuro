@@ -10,6 +10,9 @@ public:
 	ScriptComponent(Script* script);
 	~ScriptComponent();
 
+	ScriptComponent(ScriptComponent&& other) noexcept;
+	ScriptComponent& operator=(ScriptComponent&& other) noexcept;
+
 	void OnCreate();
 	void OnUpdate(float dt);
 

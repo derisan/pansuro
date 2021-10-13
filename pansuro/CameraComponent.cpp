@@ -14,11 +14,6 @@ CameraComponent::CameraComponent(const Vector3& position, const Vector3& target,
 	m_FOV = XMConvertToRadians(fov);
 }
 
-CameraComponent::~CameraComponent()
-{
-
-}
-
 void CameraComponent::Bind()
 {
 	if (m_FollowEntity)
