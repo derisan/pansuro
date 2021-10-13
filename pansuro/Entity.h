@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Scene.h"
-#include "MyUUID.h"
-#include "IDComponent.h"
-#include "TransformComponent.h"
+#include "Components.h"
 
 class Entity
 {
@@ -50,9 +48,6 @@ public:
 	{
 		return !(*this == other);
 	}
-
-	MyUUID GetUUID() { return GetComponent<IDComponent>().ID; }
-	TransformComponent& Tranfrom() { return GetComponent<TransformComponent>(); }
 
 	void Destroy()
 	{

@@ -222,6 +222,12 @@
     <ClInclude Include="StateMachine.h">
       <Filter>Source Files\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Components.h">
+      <Filter>Source Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\skinned.hlsli">

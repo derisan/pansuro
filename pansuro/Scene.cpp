@@ -4,17 +4,10 @@
 #include "Engine.h"
 #include "ResourceManager.h"
 #include "TextureDescriptorHeap.h"
-#include "CameraComponent.h"
-#include "TransformComponent.h"
-#include "MeshRendererComponent.h"
-#include "IDComponent.h"
 #include "Entity.h"
-#include "AnimatorComponent.h"
 #include "CharacterMovement.h"
-#include "ScriptComponent.h"
-#include "DebugDrawComponent.h"
-#include "BoxComponent.h"
-#include "Tags.h"
+#include "Components.h"
+
 
 Scene::Scene()
 	: m_MainCamera(nullptr)
